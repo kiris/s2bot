@@ -14,6 +14,14 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
+  "com.github.gilbertw1" %% "slack-scala-client" % "0.2.2",
+
+  "com.typesafe.akka" %% "akka-actor" % "2.5.9",
+  "com.typesafe.akka" %% "akka-http-core" % "10.0.0",
+  "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.1-akka-2.5.x",
+
+  "org.scalactic" %% "scalactic" % "3.0.1",
+  "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
 publishMavenStyle := true
