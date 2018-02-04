@@ -18,7 +18,9 @@ libraryDependencies ++= Seq(
 
   "com.typesafe.akka" %% "akka-actor" % "2.5.9",
   "com.typesafe.akka" %% "akka-http-core" % "10.0.0",
+
   "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.1-akka-2.5.x",
+  "net.debasishg" %% "redisclient" % "3.4",
 
   "org.scalactic" %% "scalactic" % "3.0.1",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"

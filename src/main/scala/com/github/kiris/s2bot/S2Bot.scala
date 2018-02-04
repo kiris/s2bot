@@ -2,16 +2,16 @@ package com.github.kiris.s2bot
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
-import slack.models.Message
+import slack.models.{Message, SlackEvent}
 import slack.rtm.SlackRtmClient
 
 import scala.concurrent.Future
 import scala.util.{Success, Try}
 
 class S2Bot(val scripts: List[Script], token: String, config: Config) {
-  implicit val system = ActorSystem("slack", config)
+  implicit private val system = ActorSystem("slack", config)
 
-  implicit val ec = system.dispatcher
+  implicit private val ec = system.dispatcher
 
   val client = SlackRtmClient(token)
 
@@ -25,25 +25,30 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   def hear(pf: PartialFunction[(String, Message), Unit]): Unit =
     client.onMessage { message =>
-      onMessage(pf, message)
+      dispatch(pf, (message.text.trim, message))
     }
 
   def respond(pf: PartialFunction[(String, Message), Unit]): Unit =
     client.onMessage { message =>
       if (message.text.startsWith(me)) {
-        onMessage(pf, message)
+        dispatch(pf, (message.text.trim, message))
       }
+    }
+
+  def onEvent(pf: PartialFunction[SlackEvent, Unit]): Unit =
+    client.onEvent { event =>
+      dispatch(pf, event)
     }
 
   def onError(pf: PartialFunction[Throwable, Unit]): Unit = {
     errorHandlers += pf
   }
 
-  private def onMessage(pf: PartialFunction[(String, Message), Unit], message: Message): Unit = {
+  private def dispatch[T](pf: PartialFunction[T, Unit], msg: T) = {
     Try {
-      pf.lift((message.text.trim, message))
+      pf.lift(msg)
     } recover {
-      case x =>
+      case x: Throwable =>
         val results = errorHandlers.map { h =>
           h.lift(x)
         }
@@ -59,6 +64,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
   def say(message: Message, text: String): Future[Long] = say(message.channel, text)
 
   def reply(message: Message, text: String): Future[Long] = say(message, s"<@${message.user}> $text")
+
 
 }
 
