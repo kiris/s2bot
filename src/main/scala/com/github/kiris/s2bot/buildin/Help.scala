@@ -2,9 +2,8 @@ package com.github.kiris.s2bot.buildin
 
 import com.github.kiris.s2bot.{S2Bot, Script}
 
-import scala.util.Success
-
 object Help extends Script with Helpable {
+
   override def usage(): Usage = Usage(
     commands = List(
       "@me help - print this message."
@@ -17,7 +16,7 @@ object Help extends Script with Helpable {
         val usage = bot.scripts.collect {
           case h: Helpable => h.usage()
         }.foldLeft(Usage.empty)(_ + _)
-        
+
         bot.say(message,
           s"""*<commands>*
              |${usage.commands.map("* " + _).mkString("\n")}
@@ -27,23 +26,25 @@ object Help extends Script with Helpable {
              |""".stripMargin.replaceAll("@me", "@noboru"))
     }
   }
+
+  case class Usage(
+      commands: List[String] = Nil,
+      jobs: List[String] = Nil
+  ) {
+    def +(that: Usage): Usage =
+      Usage(
+        commands = commands ++ that.commands,
+        jobs = jobs ++ that.jobs
+      )
+  }
+
+  object Usage {
+    val empty: Usage = Usage(Nil, Nil)
+  }
 }
+
+
 
 trait Helpable {
-  def usage(): Usage
-}
-
-case class Usage(
-    commands: List[String] = Nil,
-    jobs: List[String] = Nil
-) {
-  def +(that: Usage): Usage =
-    Usage(
-      commands = commands ++ that.commands,
-      jobs = jobs ++ that.jobs
-    )
-}
-
-object Usage {
-  val empty: Usage = Usage(Nil, Nil)
+  def usage(): Help.Usage
 }

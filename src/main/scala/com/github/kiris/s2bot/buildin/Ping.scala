@@ -1,5 +1,6 @@
 package com.github.kiris.s2bot.buildin
 
+import com.github.kiris.s2bot.buildin.Help.Usage
 import com.github.kiris.s2bot.{S2Bot, Script}
 
 object Ping extends Script with Helpable {

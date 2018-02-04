@@ -2,7 +2,7 @@ organization := "com.github.kiris"
 name := "s2bot"
 
 scalaVersion := "2.12.3"
-crossScalaVersions := Seq("2.11.3", "2.11.8")
+crossScalaVersions := Seq("2.11.8", "2.12.3")
 
 homepage := Some(url("http://github.com/kiris/s2bot"))
 licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
@@ -10,7 +10,8 @@ licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 
 resolvers ++= Seq(
   "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
-  "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
+  "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
+  "cronish" at "https://kiris.github.io/cronish/repo/"
 )
 
 libraryDependencies ++= Seq(
@@ -19,7 +20,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor" % "2.5.9",
   "com.typesafe.akka" %% "akka-http-core" % "10.0.0",
 
-  "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.1-akka-2.5.x",
+  "com.github.philcali" %% "cronish" % "0.1.5",
   "net.debasishg" %% "redisclient" % "3.4",
 
   "org.scalactic" %% "scalactic" % "3.0.1",

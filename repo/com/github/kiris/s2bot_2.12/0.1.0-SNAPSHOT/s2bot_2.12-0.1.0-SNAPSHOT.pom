@@ -41,9 +41,9 @@
             <version>10.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.enragedginger</groupId>
-            <artifactId>akka-quartz-scheduler_2.12</artifactId>
-            <version>1.6.1-akka-2.5.x</version>
+            <groupId>com.github.philcali</groupId>
+            <artifactId>cronish_2.12</artifactId>
+            <version>0.1.5</version>
         </dependency>
         <dependency>
             <groupId>net.debasishg</groupId>
