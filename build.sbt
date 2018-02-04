@@ -26,45 +26,47 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"
 )
 
-publishMavenStyle := true
-publishArtifact in Test := false
-publishTo := Some(
-  if (isSnapshot.value)
-    Opts.resolver.sonatypeSnapshots
-  else
-    Opts.resolver.sonatypeStaging
-)
+publishTo := Some(Resolver.file("file", file("repo")))
 
-sonatypeProfileName := "com.github.kiris"
-
-scmInfo := Some(
-  ScmInfo(
-    url("https://github.com/kiris/s2bot"),
-    "scm:git:git@github.com:kiris/s2bot.git"
-  )
-)
-
-developers := List(
-  Developer(
-    id = "kiris",
-    name = "Yoshiaki Iwanaga",
-    email = "kiris60@gmail.com",
-    url = url("http://kiris.github.com")
-  )
-)
-
-import ReleaseTransformations._
-releaseProcess := Seq[ReleaseStep](
-  checkSnapshotDependencies,
-  inquireVersions,
-  runClean,
-  runTest,
-  setReleaseVersion,
-  commitReleaseVersion,
-  tagRelease,
-  releaseStepCommand("publishSigned"),
-  setNextVersion,
-  commitNextVersion,
-  releaseStepCommand("sonatypeRelease"),
-  pushChanges
-)
+//publishMavenStyle := true
+//publishArtifact in Test := false
+//publishTo := Some(
+//  if (isSnapshot.value)
+//    Opts.resolver.sonatypeSnapshots
+//  else
+//    Opts.resolver.sonatypeStaging
+//)
+//
+//sonatypeProfileName := "com.github.kiris"
+//
+//scmInfo := Some(
+//  ScmInfo(
+//    url("https://github.com/kiris/s2bot"),
+//    "scm:git:git@github.com:kiris/s2bot.git"
+//  )
+//)
+//
+//developers := List(
+//  Developer(
+//    id = "kiris",
+//    name = "Yoshiaki Iwanaga",
+//    email = "kiris60@gmail.com",
+//    url = url("http://kiris.github.com")
+//  )
+//)
+//
+//import ReleaseTransformations._
+//releaseProcess := Seq[ReleaseStep](
+//  checkSnapshotDependencies,
+//  inquireVersions,
+//  runClean,
+//  runTest,
+//  setReleaseVersion,
+//  commitReleaseVersion,
+//  tagRelease,
+//  releaseStepCommand("publishSigned"),
+//  setNextVersion,
+//  commitNextVersion,
+//  releaseStepCommand("sonatypeRelease"),
+//  pushChanges
+//)
