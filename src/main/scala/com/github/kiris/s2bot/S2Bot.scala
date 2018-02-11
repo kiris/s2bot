@@ -34,7 +34,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
   def respond(pf: PartialFunction[(String, Message), Unit]): Unit =
     rtm.onMessage { message =>
       if (message.text.startsWith(me)) {
-        dispatch(pf, (message.text.trim, message))
+        dispatch(pf, (message.text.substring(me.length).trim, message))
       }
     }
 
