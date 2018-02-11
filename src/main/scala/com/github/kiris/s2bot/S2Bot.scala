@@ -2,6 +2,7 @@ package com.github.kiris.s2bot
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
+import slack.api.BlockingSlackApiClient
 import slack.models.{Message, SlackEvent}
 import slack.rtm.SlackRtmClient
 
@@ -13,9 +14,11 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   implicit private val ec = system.dispatcher
 
-  val client = SlackRtmClient(token)
+  val rtm = SlackRtmClient(token)
 
-  val selfId = client.state.self.id
+  val web = BlockingSlackApiClient(token)
+
+  val selfId = rtm.state.self.id
 
   val me = s"<@${selfId}>"
 
@@ -24,19 +27,19 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
   def run(): Unit = scripts.foreach(_.apply(this))
 
   def hear(pf: PartialFunction[(String, Message), Unit]): Unit =
-    client.onMessage { message =>
+    rtm.onMessage { message =>
       dispatch(pf, (message.text.trim, message))
     }
 
   def respond(pf: PartialFunction[(String, Message), Unit]): Unit =
-    client.onMessage { message =>
+    rtm.onMessage { message =>
       if (message.text.startsWith(me)) {
         dispatch(pf, (message.text.trim, message))
       }
     }
 
   def onEvent(pf: PartialFunction[SlackEvent, Unit]): Unit =
-    client.onEvent { event =>
+    rtm.onEvent { event =>
       dispatch(pf, event)
     }
 
@@ -59,12 +62,13 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
     }
   }
 
-  def say(channelId: String, text: String): Future[Long] = client.sendMessage(channelId, text)
+  def say(channelId: String, text: String): Future[Long] = {
+    rtm.sendMessage(channelId, text)
+  }
 
   def say(message: Message, text: String): Future[Long] = say(message.channel, text)
 
   def reply(message: Message, text: String): Future[Long] = say(message, s"<@${message.user}> $text")
-
 
 }
 

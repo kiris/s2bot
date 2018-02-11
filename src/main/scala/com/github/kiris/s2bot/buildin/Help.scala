@@ -4,7 +4,7 @@ import com.github.kiris.s2bot.{S2Bot, Script}
 
 object Help extends Script with Helpable {
 
-  override def usage(): Usage = Usage(
+  override def usage(): Helpable.Usage = Helpable.Usage(
     commands = List(
       "@me help - print this message."
     )
@@ -15,7 +15,7 @@ object Help extends Script with Helpable {
       case ("help", message) =>
         val usage = bot.scripts.collect {
           case h: Helpable => h.usage()
-        }.foldLeft(Usage.empty)(_ + _)
+        }.foldLeft(Helpable.Usage.empty)(_ + _)
 
         bot.say(message,
           s"""*<commands>*
@@ -26,6 +26,10 @@ object Help extends Script with Helpable {
              |""".stripMargin.replaceAll("@me", "@noboru"))
     }
   }
+}
+
+
+object Helpable {
 
   case class Usage(
       commands: List[String] = Nil,
@@ -41,10 +45,9 @@ object Help extends Script with Helpable {
   object Usage {
     val empty: Usage = Usage(Nil, Nil)
   }
+
 }
 
-
-
 trait Helpable {
-  def usage(): Help.Usage
+  def usage(): Helpable.Usage
 }
