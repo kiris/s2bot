@@ -17,8 +17,8 @@ resolvers ++= Seq(
 libraryDependencies ++= Seq(
   "com.github.gilbertw1" %% "slack-scala-client" % "0.2.2",
 
-  "com.typesafe.akka" %% "akka-actor" % "2.5.9",
-  "com.typesafe.akka" %% "akka-http-core" % "10.0.0",
+  "com.typesafe.akka" %% "akka-actor" % "2.4.14",
+  "com.typesafe.akka" %% "akka-http-core" % "10.0.11",
 
   "com.github.philcali" %% "cronish" % "0.1.5",
   "net.debasishg" %% "redisclient" % "3.4",
