@@ -7,7 +7,7 @@ import slack.models.{Message, SlackEvent}
 import slack.rtm.SlackRtmClient
 
 import scala.concurrent.Future
-import scala.util.{Success, Try}
+import scala.util.Try
 
 class S2Bot(val scripts: List[Script], token: String, config: Config) {
   implicit private val system = ActorSystem("slack", config)
