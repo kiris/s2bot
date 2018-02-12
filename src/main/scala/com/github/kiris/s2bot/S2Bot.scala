@@ -5,7 +5,7 @@ import java.net.URI
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
 import slack.api.BlockingSlackApiClient
-import slack.models.{Message, SlackEvent, User}
+import slack.models.{Channel, Message, SlackEvent, User}
 import slack.rtm.SlackRtmClient
 
 import scala.concurrent.Future
@@ -69,6 +69,8 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
   def getUserIdForName(name: String): Option[String] = state.getUserIdForName(name)
 
   def getUser(id: String): Option[User] = state.getUserById(id)
+
+  def getChannel(id: String): Option[Channel] = state.channels.find(_.id == id)
 
   def toLinkUrl(channelId: String, ts: String): URI = new URI(s"https://${state.team.domain}.slack.com/archives/$channelId/p${ts.replaceAll("\\.", "")}")
 }
