@@ -6,13 +6,17 @@ import cronish._
 import cronish.dsl._
 
 object CronJob {
-  def job[T](cron: Cron)(job: => T): Scheduled = task(job) executes (cron)
+  private def job[T](cron: Cron)(cmd: => T): Scheduled = task(cmd) executes (cron)
 
   object Implicits {
     implicit class S2BotSyntax(val s2bot: S2Bot) extends AnyVal {
-      def job[T](cronString: String)(job: => T): Scheduled = this.job(cronString.cron)(job)
+      def job[T](cronString: String)(cmd: => T): Scheduled = this.job(cronString.cron)(cmd)
 
-      def job[T](cron: Cron)(job: => T): Scheduled = CronJob.job(cron)(job)
+      def job[T](cron: Cron)(cmd: => T): Scheduled = CronJob.job(cron) {
+        s2bot.exec {
+          cmd
+        }
+      }
     }
   }
 }
