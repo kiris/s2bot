@@ -30,7 +30,6 @@ object Help extends Script with Helpable {
 
 
 object Helpable {
-
   case class Usage(
       commands: List[String] = Nil,
       jobs: List[String] = Nil
@@ -45,7 +44,6 @@ object Helpable {
   object Usage {
     val empty: Usage = Usage(Nil, Nil)
   }
-
 }
 
 trait Helpable {
