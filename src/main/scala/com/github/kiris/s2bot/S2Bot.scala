@@ -24,7 +24,9 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   def state = rtm.state
 
-  val me = s"<@${state.self.id}>"
+  def self = state.self
+
+  val me = s"<@${self.id}>"
 
   def run(): Unit = scripts.foreach(_.apply(this))
 
