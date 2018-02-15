@@ -24,41 +24,52 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   def state = rtm.state
 
-  val me = s"<@${state.self.id}>"
+  def self = state.self
+
+  val me = s"<@${self.id}>"
 
   def run(): Unit = scripts.foreach(_.apply(this))
 
   def hear(pf: PartialFunction[(String, Message), Unit]): Unit =
     rtm.onMessage { message =>
-      dispatch(pf, (message.text.trim, message))
+      exec {
+        pf.lift((message.text.trim, message))
+      }
     }
 
   def respond(pf: PartialFunction[(String, Message), Unit]): Unit =
     rtm.onMessage { message =>
-      if (message.text.startsWith(me)) {
-        dispatch(pf, (message.text.substring(me.length).trim, message))
+      exec {
+        if (message.text.startsWith(me)) {
+          pf.lift((message.text.substring(me.length).trim, message))
+        }
       }
     }
 
   def onEvent(pf: PartialFunction[SlackEvent, Unit]): Unit =
     rtm.onEvent { event =>
-      dispatch(pf, event)
+      exec {
+        pf.lift(event)
+      }
     }
 
   def onError(pf: PartialFunction[Throwable, Unit]): Unit = errorHandlers += pf
 
-  private def dispatch[T](pf: PartialFunction[T, Unit], msg: T): Try[Any] =
+  def exec[T](f: => T): Unit = {
     Try {
-      pf.lift(msg)
+      f
     } recover {
       case x: Throwable =>
-        val results = errorHandlers.map(_.lift(x))
-        if (results.forall(_.isEmpty)) {
+        val results = errorHandlers.flatMap(_.lift(x))
+        if (results.isEmpty) {
           x.printStackTrace()
         }
     }
+  }
 
   def say(channelId: String, text: String): Future[Long] = rtm.sendMessage(channelId, text)
+
+  def say(channel: Channel, text: String): Future[Long] = say(channel.id, text)
 
   def say(message: Message, text: String): Future[Long] = say(message.channel, text)
 
