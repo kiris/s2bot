@@ -22,34 +22,33 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="sbt: org.scala-lang:scala-library:2.12.3:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe.akka:akka-stream_2.12:2.4.20:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe.akka:akka-parsing_2.12:10.0.11:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe.akka:akka-http-core_2.12:10.0.11:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe.akka:akka-actor_2.12:2.4.20:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe:config:1.3.0:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.slf4j:slf4j-api:1.7.2:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scala-lang.modules:scala-parser-combinators_2.12:1.0.5:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.github.philcali:scalendar_2.12:0.1.5:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.github.philcali:cronish_2.12:0.1.5:jar" level="project" />
-    <orderEntry type="library" scope="TEST" name="sbt: org.scalatest:scalatest_2.12:3.0.1:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scalactic:scalactic_2.12:3.0.1:jar" level="project" />
-    <orderEntry type="library" scope="TEST" name="sbt: org.scala-lang.modules:scala-xml_2.12:1.0.5:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.typelevel:macro-compat_2.12:1.1.1:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scala-lang.modules:scala-java8-compat_2.12:0.8.0:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scala-lang.modules:scala-async_2.12:0.9.6:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.12.3:jar" level="project" />
-    <orderEntry type="library" name="sbt: org.reactivestreams:reactive-streams:1.0.0:jar" level="project" />
-    <orderEntry type="library" name="sbt: joda-time:joda-time:2.9.9:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe:ssl-config-core_2.12:0.2.1:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.github.gilbertw1:slack-scala-client_2.12:0.2.2:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.9:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.9:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.fasterxml.jackson.core:jackson-databind:2.8.9:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.fasterxml.jackson.core:jackson-core:2.8.9:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.fasterxml.jackson.core:jackson-annotations:2.8.9:jar" level="project" />
-    <orderEntry type="library" name="sbt: commons-pool:commons-pool:1.6:jar" level="project" />
-    <orderEntry type="library" name="sbt: net.debasishg:redisclient_2.12:3.4:jar" level="project" />
-    <orderEntry type="library" name="sbt: com.typesafe.play:play-functional_2.12:2.6.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-stm:scala-stm_2.12:0.8:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.github.etaty:rediscala_2.12:1.8.0:jar" level="project" />
     <orderEntry type="library" name="sbt: com.typesafe.play:play-json_2.12:2.6.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe.play:play-functional_2.12:2.6.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.fasterxml.jackson.core:jackson-annotations:2.8.9:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.fasterxml.jackson.core:jackson-core:2.8.9:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.fasterxml.jackson.core:jackson-databind:2.8.9:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.8.9:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.8.9:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.github.gilbertw1:slack-scala-client_2.12:0.2.2:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe:ssl-config-core_2.12:0.2.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: joda-time:joda-time:2.9.9:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.reactivestreams:reactive-streams:1.0.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang:scala-reflect:2.12.3:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang.modules:scala-async_2.12:0.9.6:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang.modules:scala-java8-compat_2.12:0.8.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.typelevel:macro-compat_2.12:1.1.1:jar" level="project" />
+    <orderEntry type="library" scope="TEST" name="sbt: org.scala-lang.modules:scala-xml_2.12:1.0.5:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scalactic:scalactic_2.12:3.0.1:jar" level="project" />
+    <orderEntry type="library" scope="TEST" name="sbt: org.scalatest:scalatest_2.12:3.0.1:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.github.philcali:cronish_2.12:0.1.5:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.github.philcali:scalendar_2.12:0.1.5:jar" level="project" />
+    <orderEntry type="library" name="sbt: org.scala-lang.modules:scala-parser-combinators_2.12:1.0.5:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe:config:1.3.0:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe.akka:akka-actor_2.12:2.4.20:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe.akka:akka-http-core_2.12:10.0.11:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe.akka:akka-parsing_2.12:10.0.11:jar" level="project" />
+    <orderEntry type="library" name="sbt: com.typesafe.akka:akka-stream_2.12:2.4.20:jar" level="project" />
   </component>
 </module>

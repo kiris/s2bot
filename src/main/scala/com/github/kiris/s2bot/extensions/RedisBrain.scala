@@ -1,12 +1,13 @@
 package com.github.kiris.s2bot.extensions
 import com.github.kiris.s2bot.S2Bot
-import com.redis._
-import com.redis.serialization.{Format, Parse}
+import redis.{ByteStringDeserializer, ByteStringSerializer, RedisClient}
+
+import scala.concurrent.Future
 
 class RedisBrain(client: RedisClient, redisKey: String = "s2bot:brain") {
-  def get[A](key: String)(implicit format: Format, parser: Parse[A]): Option[A] = client.hget[A](redisKey, key)
+  def get[A : ByteStringDeserializer](key: String): Future[Option[A]] = client.hget(redisKey, key)
 
-  def set[A](key: String, value: A)(implicit format: Format): Boolean = client.hset(redisKey, key, value)
+  def set[A : ByteStringSerializer](key: String, value: A): Future[Boolean] = client.hset(redisKey, key, value)
 }
 
 object RedisBrain {

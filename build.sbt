@@ -21,7 +21,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-http-core" % "10.0.11",
 
   "com.github.philcali" %% "cronish" % "0.1.5",
-  "net.debasishg" %% "redisclient" % "3.4",
+  "com.github.etaty" %% "rediscala" % "1.8.0",
 
   "org.scalactic" %% "scalactic" % "3.0.1",
   "org.scalatest" %% "scalatest" % "3.0.1" % "test"

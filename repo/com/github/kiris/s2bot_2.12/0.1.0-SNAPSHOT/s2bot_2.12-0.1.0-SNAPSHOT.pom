@@ -46,9 +46,9 @@
             <version>0.1.5</version>
         </dependency>
         <dependency>
-            <groupId>net.debasishg</groupId>
-            <artifactId>redisclient_2.12</artifactId>
-            <version>3.4</version>
+            <groupId>com.github.etaty</groupId>
+            <artifactId>rediscala_2.12</artifactId>
+            <version>1.8.0</version>
         </dependency>
         <dependency>
             <groupId>org.scalactic</groupId>
