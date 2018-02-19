@@ -4,7 +4,7 @@ import java.net.URI
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
-import slack.api.BlockingSlackApiClient
+import slack.api.{BlockingSlackApiClient, SlackApiClient}
 import slack.models.{Channel, Message, SlackEvent, User}
 import slack.rtm.SlackRtmClient
 
@@ -20,7 +20,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   val rtm = SlackRtmClient(token)
 
-  val web = BlockingSlackApiClient(token)
+  val web = SlackApiClient(token)
 
   def state = rtm.state
 
