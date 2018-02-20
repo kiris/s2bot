@@ -1,8 +1,8 @@
 organization := "com.github.kiris"
 name := "s2bot"
 
-scalaVersion := "2.12.3"
-crossScalaVersions := Seq("2.11.8", "2.12.3")
+scalaVersion := "2.12.4"
+crossScalaVersions := Seq("2.11.8", "2.12.4")
 
 homepage := Some(url("http://github.com/kiris/s2bot"))
 licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))

@@ -1,9 +1,5 @@
 *.class
 *.log
-### https://raw.github.com/github/gitignore/2b3b1f428fb84dc4ba3ad2307ec44af3c5799848/scala.gitignore
-
-*.class
-*.log
 
 # sbt specific
 .cache
@@ -15,13 +11,11 @@ lib_managed/
 src_managed/
 project/boot/
 project/plugins/project/
-
+src/test/resources/application.conf
 # Scala-IDE specific
 .scala_dependencies
 .worksheet
 
-# ENSIME specific
-.ensime_cache/
-.ensime
-
-
+# IntelliJ
+.idea
+.idea_modules
