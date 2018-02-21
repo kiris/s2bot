@@ -28,7 +28,11 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   val me = s"<@${self.id}>"
 
-  def run(): Unit = scripts.foreach(_.apply(this))
+  def run(): Unit = {
+    Runtime.
+
+    scripts.foreach(_.apply(this))
+  }
 
   def hear(pf: PartialFunction[(String, Message), Unit]): Unit =
     rtm.onMessage { message =>

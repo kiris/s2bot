@@ -8,6 +8,17 @@ class RedisBrain(client: RedisClient, redisKey: String = "s2bot:brain") {
   def get[A : ByteStringDeserializer](key: String): Future[Option[A]] = client.hget(redisKey, key)
 
   def set[A : ByteStringSerializer](key: String, value: A): Future[Boolean] = client.hset(redisKey, key, value)
+
+  def replace[A : ByteStringSerializer](key: String, oldValue: A, newValue: A): Future[Boolean] = {
+    val tr = client.transaction()
+    if (tr.hget(redisKey, key) == oldValue) {
+      tr.hset(redisKey, key, newValue)
+    } else {
+
+    }
+
+    tr.exec()
+  }
 }
 
 object RedisBrain {
