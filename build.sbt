@@ -1,8 +1,8 @@
 organization := "com.github.kiris"
 name := "s2bot"
 
-scalaVersion := "2.12.3"
-crossScalaVersions := Seq("2.11.8", "2.12.3")
+scalaVersion := "2.12.4"
+crossScalaVersions := Seq("2.11.8", "2.12.4")
 
 homepage := Some(url("http://github.com/kiris/s2bot"))
 licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
@@ -11,7 +11,8 @@ licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt"))
 resolvers ++= Seq(
   "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
   "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
-  "cronish" at "https://kiris.github.io/cronish/repo/"
+  "cronish" at "https://kiris.github.io/cronish/repo/",
+  "scalender" at "https://kiris.github.io/scalender/repo/"
 )
 
 libraryDependencies ++= Seq(
