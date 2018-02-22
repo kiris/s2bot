@@ -4,7 +4,7 @@ import java.net.URI
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
-import slack.api.{BlockingSlackApiClient, SlackApiClient}
+import slack.api.SlackApiClient
 import slack.models.{Channel, Message, SlackEvent, User}
 import slack.rtm.SlackRtmClient
 
@@ -84,5 +84,11 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
   def getChannel(id: String): Option[Channel] = state.channels.find(_.id == id)
 
   def toLinkUrl(channelId: String, ts: String): URI = new URI(s"https://${state.team.domain}.slack.com/archives/$channelId/p${ts.replaceAll("\\.", "")}")
+
+  def channelLink(channelId: String): String = s"<#$channelId>"
+
+  def channelLink(channel: Channel): String = channelLink(channel.id)
+
+  def channelLinkForName(channelName: String): Option[String] = getChannelIdForName(channelName).map(channelLink)
 }
 
