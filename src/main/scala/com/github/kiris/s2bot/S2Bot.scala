@@ -81,14 +81,5 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   def getUser(id: String): Option[User] = state.getUserById(id)
 
-  def getChannel(id: String): Option[Channel] = state.channels.find(_.id == id)
-
-  def toLinkUrl(channelId: String, ts: String): URI = new URI(s"https://${state.team.domain}.slack.com/archives/$channelId/p${ts.replaceAll("\\.", "")}")
-
-  def channelLink(channelId: String): String = s"<#$channelId>"
-
-  def channelLink(channel: Channel): String = channelLink(channel.id)
-
-  def channelLinkForName(channelName: String): Option[String] = getChannelIdForName(channelName).map(channelLink)
-}
+  def getChannel(id: String): Option[Channel] = state.channels.find(_.id == id)}
 
