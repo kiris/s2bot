@@ -72,7 +72,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
   }
 
   def say(channelId: String, text: String): Future[Long] = {
-    val (c, t) = sendMessageHooks.foldRight(channelId, text) { case (hook, (channelId, text)) =>
+    val (c, t) = sendMessageHooks.foldLeft(channelId, text) { case ((channelId, text), hook) =>
       hook(channelId, text)
     }
 
