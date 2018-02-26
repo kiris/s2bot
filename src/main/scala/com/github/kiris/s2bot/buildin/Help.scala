@@ -6,7 +6,7 @@ object Help extends Script with Helpable {
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     commands = List(
-      "@me help - print this message."
+      s"${bot.me} help - print this message."
     )
   )
 
@@ -26,7 +26,8 @@ object Help extends Script with Helpable {
              |
              |*<jobs>*
              |${usage.jobs.map("* " + _).mkString("\n")}
-             |""".stripMargin.replaceAll("@me", "@noboru"))
+             |""".stripMargin
+        )
     }
   }
 }

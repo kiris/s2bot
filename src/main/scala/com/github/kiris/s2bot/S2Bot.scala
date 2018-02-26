@@ -1,7 +1,5 @@
 package com.github.kiris.s2bot
 
-import java.net.URI
-
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
 import slack.api.SlackApiClient
@@ -16,7 +14,11 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   implicit private val ec = system.dispatcher
 
-  private val errorHandlers: collection.mutable.ListBuffer[PartialFunction[Throwable, Unit]] = collection.mutable.ListBuffer[PartialFunction[Throwable, Unit]]()
+  private val errorHandlers: collection.mutable.ListBuffer[PartialFunction[Throwable, Unit]] =
+    collection.mutable.ListBuffer[PartialFunction[Throwable, Unit]]()
+
+  private val sendMessageHooks: collection.mutable.ListBuffer[(String, String) => (String, String)] =
+    collection.mutable.ListBuffer[(String, String) => (String, String)]()
 
   val rtm = SlackRtmClient(token)
 
@@ -26,7 +28,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   def self = state.self
 
-  val me = s"<@${self.id}>"
+  val me = Fmt.linkUser(self.id)
 
   def run(): Unit = scripts.foreach(_.apply(this))
 
@@ -55,6 +57,8 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   def onError(pf: PartialFunction[Throwable, Unit]): Unit = errorHandlers += pf
 
+  def addSendMessageHook(hook: (String, String) => (String, String)): Unit = sendMessageHooks += hook
+
   def exec[T](f: => T): Unit = {
     Try {
       f
@@ -67,13 +71,19 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
     }
   }
 
-  def say(channelId: String, text: String): Future[Long] = rtm.sendMessage(channelId, text)
+  def say(channelId: String, text: String): Future[Long] = {
+    val (c, t) = sendMessageHooks.foldRight(channelId, text) { case (hook, (channelId, text)) =>
+      hook(channelId, text)
+    }
+
+    rtm.sendMessage(c, t)
+  }
 
   def say(channel: Channel, text: String): Future[Long] = say(channel.id, text)
 
   def say(message: Message, text: String): Future[Long] = say(message.channel, text)
 
-  def reply(message: Message, text: String): Future[Long] = say(message, s"<@${message.user}> $text")
+  def reply(message: Message, text: String): Future[Long] = say(message, s"${Fmt.linkUser(message.user)} $text")
 
   def getChannelIdForName(name: String): Option[String] = state.getChannelIdForName(name)
 

@@ -13,7 +13,7 @@ object Ping extends Script with Helpable {
 
   override def usage(bot: S2Bot): Usage = Usage(
     commands = List(
-      "@me ping - pong"
+      s"${bot.me} ping - pong"
     )
   )
 
