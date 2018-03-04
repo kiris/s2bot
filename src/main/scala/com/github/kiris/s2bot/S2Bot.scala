@@ -9,7 +9,9 @@ import slack.rtm.SlackRtmClient
 import scala.concurrent.Future
 import scala.util.Try
 
-class S2Bot(val scripts: List[Script], token: String, config: Config) {
+import scala.concurrent.duration._
+
+class S2Bot(val scripts: List[Script], token: String, config: Config, duration: FiniteDuration = 5.seconds) {
   implicit private val system = ActorSystem("slack", config)
 
   implicit private val ec = system.dispatcher
@@ -20,7 +22,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
   private val sendMessageHooks: collection.mutable.ListBuffer[(String, String) => (String, String)] =
     collection.mutable.ListBuffer[(String, String) => (String, String)]()
 
-  val rtm = SlackRtmClient(token)
+  val rtm = SlackRtmClient(token, duration)
 
   val web = SlackApiClient(token)
 
@@ -91,5 +93,8 @@ class S2Bot(val scripts: List[Script], token: String, config: Config) {
 
   def getUser(id: String): Option[User] = state.getUserById(id)
 
-  def getChannel(id: String): Option[Channel] = state.channels.find(_.id == id)}
+  def getChannel(id: String): Option[Channel] = state.channels.find(_.id == id)
+}
+
+
 
