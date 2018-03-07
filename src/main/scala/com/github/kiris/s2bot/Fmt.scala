@@ -1,7 +1,5 @@
 package com.github.kiris.s2bot
 
-import java.net.URI
-
 import slack.models.{Channel, User}
 
 object Fmt {

@@ -81,11 +81,17 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
     rtm.sendMessage(c, t)
   }
 
+
   def say(channel: Channel, text: String): Future[Long] = say(channel.id, text)
 
   def say(message: Message, text: String): Future[Long] = say(message.channel, text)
 
   def reply(message: Message, text: String): Future[Long] = say(message, s"${Fmt.linkUser(message.user)} $text")
+
+  def reaction(channelId: String, timestamp: String, emojiName: String): Future[Boolean] =
+    web.addReaction(emojiName, channelId = Some(channelId), timestamp = Some(timestamp))
+
+  def reaction(message: Message, emojiName: String): Future[Boolean] = reaction(message.channel, message.ts, emojiName)
 
   def getChannelIdForName(name: String): Option[String] = state.getChannelIdForName(name)
 
