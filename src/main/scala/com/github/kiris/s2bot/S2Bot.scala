@@ -51,7 +51,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
       }
     }
 
-  def onEvent(pf: PartialFunction[SlackEvent, Future[Unit]]): Unit =
+  def onEvent(pf: PartialFunction[SlackEvent, Future[Any]]): Unit =
     rtm.onEvent { event =>
       exec {
         pf.lift(event)
