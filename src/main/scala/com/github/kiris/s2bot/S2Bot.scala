@@ -7,9 +7,8 @@ import slack.models.{Channel, Message, SlackEvent, User}
 import slack.rtm.SlackRtmClient
 
 import scala.concurrent.Future
-import scala.util.Try
-
 import scala.concurrent.duration._
+
 
 class S2Bot(val scripts: List[Script], token: String, config: Config, duration: FiniteDuration = 5.seconds) {
   implicit private val system = ActorSystem("slack", config)
@@ -34,23 +33,25 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
 
   def run(): Unit = scripts.foreach(_.apply(this))
 
-  def hear(pf: PartialFunction[(String, Message), Unit]): Unit =
+  def hear(pf: PartialFunction[(String, Message), Future[Any]]): Unit =
     rtm.onMessage { message =>
       exec {
         pf.lift((message.text.trim, message))
       }
     }
 
-  def respond(pf: PartialFunction[(String, Message), Unit]): Unit =
+  def respond(pf: PartialFunction[(String, Message), Future[Any]]): Unit =
     rtm.onMessage { message =>
       exec {
-        if (message.text.startsWith(me)) {
+         if (message.text.startsWith(me)) {
           pf.lift((message.text.substring(me.length).trim, message))
+        } else {
+          None
         }
       }
     }
 
-  def onEvent(pf: PartialFunction[SlackEvent, Unit]): Unit =
+  def onEvent(pf: PartialFunction[SlackEvent, Future[Unit]]): Unit =
     rtm.onEvent { event =>
       exec {
         pf.lift(event)
@@ -61,17 +62,17 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
 
   def addSendMessageHook(hook: (String, String) => (String, String)): Unit = sendMessageHooks += hook
 
-  def exec[T](f: => T): Unit = {
-    Try {
-      f
-    } recover {
-      case x: Throwable =>
-        val results = errorHandlers.flatMap(_.lift(x))
+  def exec[T](f: => Option[Future[T]]): Unit =
+    f match {
+      case Some(result) => result.failed.foreach { ex =>
+        val results = errorHandlers.flatMap(_.lift(ex))
         if (results.isEmpty) {
-          x.printStackTrace()
+          ex.printStackTrace()
         }
+      }
+      case _ => ()
     }
-  }
+
 
   def say(channelId: String, text: String): Future[Long] = {
     val (c, t) = sendMessageHooks.foldLeft(channelId, text) { case ((channelId, text), hook) =>
@@ -80,7 +81,6 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
 
     rtm.sendMessage(c, t)
   }
-
 
   def say(channel: Channel, text: String): Future[Long] = say(channel.id, text)
 
@@ -101,6 +101,3 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
 
   def getChannel(id: String): Option[Channel] = state.channels.find(_.id == id)
 }
-
-
-

@@ -6,8 +6,9 @@ import com.github.kiris.s2bot.{S2Bot, Script}
 object Ping extends Script with Helpable {
 
   override def apply(bot: S2Bot): Unit = {
-    bot.respond { case ("ping", message) =>
-      bot.reply(message, "pong").value
+    bot.respond {
+      case ("ping", message) =>
+        bot.reply(message, "pong")
     }
   }
 
