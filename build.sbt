@@ -12,11 +12,12 @@ resolvers ++= Seq(
   "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
   "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/",
   "cronish" at "https://kiris.github.io/cronish/repo/",
-  "scalender" at "https://kiris.github.io/scalender/repo/"
+  "scalender" at "https://kiris.github.io/scalender/repo/",
+  "slack-scala-client" at "https://kiris.github.io/slack-scala-client/repo/"
 )
 
 libraryDependencies ++= Seq(
-  "com.github.gilbertw1" %% "slack-scala-client" % "0.2.2",
+  "com.github.gilbertw1" %% "slack-scala-client" % "0.2.4-SNAPSHOT",
 
   "com.typesafe.akka" %% "akka-actor" % "2.4.14",
   "com.typesafe.akka" %% "akka-http-core" % "10.0.11",
