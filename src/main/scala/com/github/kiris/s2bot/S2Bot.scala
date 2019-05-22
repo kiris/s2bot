@@ -18,8 +18,8 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
   private val errorHandlers: collection.mutable.ListBuffer[PartialFunction[Throwable, Unit]] =
     collection.mutable.ListBuffer[PartialFunction[Throwable, Unit]]()
 
-  private val sendMessageHooks: collection.mutable.ListBuffer[(String, String) => (String, String)] =
-    collection.mutable.ListBuffer[(String, String) => (String, String)]()
+  private val sendMessageHooks: collection.mutable.ListBuffer[(String, String, Option[String]) => (String, String, Option[String])] =
+    collection.mutable.ListBuffer[(String, String, Option[String]) => (String, String, Option[String])]()
 
   val rtm = SlackRtmClient(token, duration)
 
@@ -60,7 +60,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
 
   def onError(pf: PartialFunction[Throwable, Unit]): Unit = errorHandlers += pf
 
-  def addSendMessageHook(hook: (String, String) => (String, String)): Unit = sendMessageHooks += hook
+  def addSendMessageHook(hook: (String, String, Option[String]) => (String, String, Option[String])): Unit = sendMessageHooks += hook
 
   def exec[T](f: => Option[Future[T]]): Unit =
     f match {
@@ -74,17 +74,15 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
     }
 
 
-  def say(channelId: String, text: String): Future[Long] = {
-    val (c, t) = sendMessageHooks.foldLeft(channelId, text) { case ((channelId, text), hook) =>
-      hook(channelId, text)
+  def say(channelId: String, text: String, threadId: Option[String] = None): Future[Long] = {
+    val (c, t, th) = sendMessageHooks.foldLeft(channelId, text, threadId) { case ((channelId, text, threadId), hook) =>
+      hook(channelId, text, threadId)
     }
 
-    rtm.sendMessage(c, t)
+    rtm.sendMessage(c, t, th)
   }
 
-  def say(channel: Channel, text: String): Future[Long] = say(channel.id, text)
-
-  def say(message: Message, text: String): Future[Long] = say(message.channel, text)
+  def say(message: Message, text: String): Future[Long] = say(message.channel, text, message.thread_ts)
 
   def reply(message: Message, text: String): Future[Long] = say(message, s"${Fmt.linkUser(message.user)} $text")
 
