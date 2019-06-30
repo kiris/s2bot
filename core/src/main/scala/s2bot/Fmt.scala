@@ -1,4 +1,4 @@
-package com.github.kiris.s2bot
+package s2bot
 
 import slack.models.{Channel, User}
 

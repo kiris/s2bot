@@ -1,4 +1,4 @@
-package com.github.kiris.s2bot
+package s2bot
 
 import akka.actor.ActorSystem
 import com.typesafe.config.Config
@@ -8,7 +8,6 @@ import slack.rtm.SlackRtmClient
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-
 
 class S2Bot(val scripts: List[Script], token: String, config: Config, duration: FiniteDuration = 5.seconds) {
   implicit private val system = ActorSystem("slack", config)
@@ -21,7 +20,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
   private val sendMessageHooks: collection.mutable.ListBuffer[(String, String, Option[String]) => (String, String, Option[String])] =
     collection.mutable.ListBuffer[(String, String, Option[String]) => (String, String, Option[String])]()
 
-  val rtm = SlackRtmClient(token, duration)
+  val rtm = SlackRtmClient(token = token, duration = duration)
 
   val web = SlackApiClient(token)
 
