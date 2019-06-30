@@ -13,7 +13,7 @@ import s2bot.{S2Bot, Script}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Amesh(implicit system: ActorSystem) extends Script with Helpable {
+class TokyoAmesh(implicit system: ActorSystem) extends Script with Helpable {
 
   implicit private val ec: ExecutionContext = system.dispatcher
 
