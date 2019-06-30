@@ -7,9 +7,7 @@ import s2bot.extensions.brain.{Brain, Codec}
 import scala.concurrent.Future
 import RedisBrain._
 
-class RedisBrain(client: RedisClient, redisKey: String = "s2bot:brain") extends Brain {
-  protected type E = ByteString
-
+class RedisBrain(client: RedisClient, redisKey: String = "s2bot:brain") extends Brain[ByteString] {
   override def get[A](key: String)(implicit reads: Codec[A, ByteString]): Future[Option[A]] = {
     client.hget[A](redisKey, key)
   }

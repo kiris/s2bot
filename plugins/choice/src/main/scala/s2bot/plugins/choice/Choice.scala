@@ -1,7 +1,7 @@
 package s2bot.plugins.choice
 
-import s2bot.buildin.Helpable
 import s2bot.buildin.Helpable.DefaultKeys
+import s2bot.plugins.buildin.Helpable
 import s2bot.{S2Bot, Script}
 import slack.models.Message
 

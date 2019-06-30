@@ -1,7 +1,7 @@
-package s2bot.buildin
+package s2bot.plugins.buildin
 
 import cats.implicits._
-import s2bot.buildin.Helpable.DefaultKeys
+import Helpable.DefaultKeys
 import s2bot.{S2Bot, Script}
 
 object Help extends Script with Helpable {

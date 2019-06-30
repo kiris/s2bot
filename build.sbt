@@ -34,8 +34,11 @@ lazy val modules: Seq[ProjectReference] = Seq(
   core,
   cronJobExtension,
   brainExtension,
+  brainPlayJsonExtension,
   redisBrainExtension,
   choicePlugin,
+  newChannelsPlugin,
+  newEmojisPlugin,
   ameshPlugin
 )
 
@@ -78,6 +81,7 @@ lazy val cronJobExtension = (project in file("extensions/cron-job"))
       core % "test->test;compile->compile"
     )
 
+
 lazy val brainExtension = (project in file("extensions/brain"))
     .settings(baseSettings)
     .settings(
@@ -85,6 +89,18 @@ lazy val brainExtension = (project in file("extensions/brain"))
     )
     .dependsOn(
       core % "test->test;compile->compile"
+    )
+
+lazy val brainPlayJsonExtension = (project in file("extensions/brain-play-json"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-brain-play-json-extension",
+      libraryDependencies ++= Seq(
+        "com.typesafe.play" %% "play-json" % "2.6.7"
+      )
+    )
+    .dependsOn(
+      brainExtension % "test->test;compile->compile"
     )
 
 lazy val redisBrainExtension = (project in file("extensions/redis-brain"))
@@ -99,6 +115,7 @@ lazy val redisBrainExtension = (project in file("extensions/redis-brain"))
       brainExtension % "test->test;compile->compile"
     )
 
+
 lazy val choicePlugin = (project in file("plugins/choice"))
     .settings(baseSettings)
     .settings(
@@ -106,6 +123,27 @@ lazy val choicePlugin = (project in file("plugins/choice"))
     )
     .dependsOn(
       core % "test->test;compile->compile"
+    )
+
+lazy val newChannelsPlugin = (project in file("plugins/new-channels"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-new-channels-plugin"
+    )
+    .dependsOn(
+      core % "test->test;compile->compile"
+    )
+
+lazy val newEmojisPlugin = (project in file("plugins/new-emojis"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-new-emojis-plugin"
+    )
+    .dependsOn(
+      core % "test->test;compile->compile",
+      brainExtension % "test->test;compile->compile",
+      brainPlayJsonExtension  % "test->test;compile->compile",
+      cronJobExtension % "test->test;compile->compile"
     )
 
 lazy val ameshPlugin = (project in file("plugins/amesh"))

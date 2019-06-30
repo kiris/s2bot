@@ -7,8 +7,8 @@ import akka.actor.ActorSystem
 import com.sksamuel.scrimage.Image
 import com.sksamuel.scrimage.composite.AlphaComposite
 import dispatch._
-import s2bot.buildin.Helpable
 import s2bot.buildin.Helpable.{DefaultKeys, Usage}
+import s2bot.plugins.buildin.Helpable
 import s2bot.{S2Bot, Script}
 
 import scala.concurrent.{ExecutionContext, Future}

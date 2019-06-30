@@ -1,6 +1,6 @@
-package s2bot.buildin
+package s2bot.plugins.buildin
 
-import s2bot.buildin.Helpable.{DefaultKeys, Usage}
+import s2bot.plugins.buildin.Helpable.{DefaultKeys, Usage}
 import s2bot.{S2Bot, Script}
 import slack.models.Message
 
