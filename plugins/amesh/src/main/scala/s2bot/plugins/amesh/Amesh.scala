@@ -23,25 +23,6 @@ class Amesh(implicit system: ActorSystem) extends Script with Helpable {
     )
   )
 
-  private def getImage(u: String): Future[Image] = {
-    val svc = url(u)
-    Http.withConfiguration(_ setFollowRedirect true)(svc OK as.Bytes).map(Image(_))
-  }
-
-  private def amesh(dateTime: LocalDateTime): Future[Image] = {
-    val n = dateTime.minus(dateTime.getMinute % 5, ChronoUnit.MINUTES)
-    val str = "%tY%<tm%<td%<tH%<tM".format(n)
-    for {
-      imageMsk <- getImage("http://tokyo-ame.jwa.or.jp/map/msk000.png")
-      imageMap <- getImage("http://tokyo-ame.jwa.or.jp/map/map000.jpg")
-      imageWether <- getImage(s"http://tokyo-ame.jwa.or.jp/mesh/000/$str.gif")
-    } yield {
-      imageMap
-          .composite(new AlphaComposite(1.0), imageWether)
-          .composite(new AlphaComposite(1.0), imageMsk)
-    }
-  }
-
   override def apply(bot: S2Bot): Unit = {
     bot.hear {
       case ("amesh", msg) =>
@@ -54,6 +35,25 @@ class Amesh(implicit system: ActorSystem) extends Script with Helpable {
             channels = Some(Seq(msg.channel))
           )
         } yield ()
+    }
+  }
+
+  private def getImage(u: String): Future[Image] = {
+    val svc = url(u)
+    Http.withConfiguration(_ setFollowRedirect true)(svc OK as.Bytes).map(Image(_))
+  }
+
+  private[amesh] def amesh(dateTime: LocalDateTime): Future[Image] = {
+    val n = dateTime.minus((dateTime.getMinute % 5) + 5, ChronoUnit.MINUTES)
+    val str = "%tY%<tm%<td%<tH%<tM".format(n)
+    for {
+      imageMsk <- getImage("http://tokyo-ame.jwa.or.jp/map/msk000.png")
+      imageMap <- getImage("http://tokyo-ame.jwa.or.jp/map/map000.jpg")
+      imageWeather <- getImage(s"http://tokyo-ame.jwa.or.jp/mesh/000/$str.gif")
+    } yield {
+      imageMap
+          .composite(new AlphaComposite(1.0), imageWeather)
+          .composite(new AlphaComposite(1.0), imageMsk)
     }
   }
 }
