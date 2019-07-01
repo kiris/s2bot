@@ -1,3 +1,5 @@
+import sbt.Keys.libraryDependencies
+
 val Scala212 = "2.12.8"
 val Scala211 = "2.11.8"
 
@@ -39,7 +41,9 @@ lazy val modules: Seq[ProjectReference] = Seq(
   choicePlugin,
   newChannelsPlugin,
   newEmojisPlugin,
-  ameshPlugin
+  ameshPlugin,
+  googleImageSearchPlugin,
+  deleteMessagePlugin
 )
 
 lazy val `s2bot-root` = (project in file("."))
@@ -156,6 +160,28 @@ lazy val ameshPlugin = (project in file("plugins/amesh"))
         "com.sksamuel.scrimage" %% "scrimage-filters" % "2.1.8",
         "net.databinder.dispatch" %% "dispatch-core" % "0.13.3"
       )
+    )
+    .dependsOn(
+      core % "test->test;compile->compile"
+    )
+
+lazy val googleImageSearchPlugin = (project in file("plugins/google-image-search"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-google-image-search-plugin",
+      libraryDependencies ++= Seq(
+        "net.databinder.dispatch" %% "dispatch-core" % "0.13.3",
+        "com.github.etaty" %% "rediscala" % "1.8.0"
+      )
+    )
+    .dependsOn(
+      core % "test->test;compile->compile"
+    )
+
+lazy val deleteMessagePlugin = (project in file("plugins/delete-message"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-delete-message-plugin"
     )
     .dependsOn(
       core % "test->test;compile->compile"

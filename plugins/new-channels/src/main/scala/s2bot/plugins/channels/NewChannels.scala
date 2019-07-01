@@ -1,6 +1,5 @@
 package s2bot.plugins.channels
 
-
 import com.typesafe.config.Config
 import s2bot.{Fmt, S2Bot, Script}
 import s2bot.plugins.buildin.Helpable
