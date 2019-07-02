@@ -6,12 +6,12 @@ import akka.actor.ActorSystem
 import org.scalatest.AsyncFlatSpec
 
 
-class TokyoAmeshTest extends AsyncFlatSpec {
+class AmeshTest extends AsyncFlatSpec {
 
   private implicit val actorSystem: ActorSystem = ActorSystem()
 
   "amesh" should "be" in {
-    new TokyoAmesh().amesh(LocalDateTime.now()).map { _ =>
+    new Amesh().amesh(LocalDateTime.now()).map { _ =>
       succeed
     }
   }

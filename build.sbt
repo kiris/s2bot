@@ -1,21 +1,27 @@
 import sbt.Keys.libraryDependencies
 
 val Scala212 = "2.12.8"
-val Scala211 = "2.11.8"
 
 lazy val baseSettings = Seq(
   homepage := Some(url("http://github.com/kiris/s2bot")),
   licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
   organization := "com.github.kiris",
   scalaVersion := Scala212,
-  crossScalaVersions := Scala212 :: Scala211 :: Nil,
+  crossScalaVersions := Scala212 :: Nil,
   version := (version in ThisBuild).value,
   scalacOptions := Seq(
-    "-Xfatal-warnings",
     "-language:implicitConversions",
     "-language:higherKinds",
     "-language:existentials",
-    "-language:postfixOps"
+    "-language:postfixOps",
+    "-deprecation",
+    "-feature",
+    "-unchecked",
+    "-Ywarn-dead-code",
+    "-Ywarn-nullary-unit",
+    "-Ywarn-numeric-widen",
+    "-Ywarn-unused-import",
+    "-Xfatal-warnings"
   ),
   libraryDependencies := Seq(
     "org.typelevel" %% "cats-core" % "2.0.0-M1",
@@ -63,7 +69,6 @@ lazy val core = (project in file("core"))
       ),
       libraryDependencies ++= Seq(
         "com.github.slack-scala-client" %% "slack-scala-client" % "0.2.6",
-
         "com.typesafe.akka" %% "akka-actor" % "2.4.14",
         "com.typesafe.akka" %% "akka-http-core" % "10.0.11"
       )

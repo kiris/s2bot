@@ -74,7 +74,7 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
 
 
   def say(channelId: String, text: String, threadId: Option[String] = None): Future[Long] = {
-    val (c, t, th) = sendMessageHooks.foldLeft(channelId, text, threadId) { case ((channelId, text, threadId), hook) =>
+    val (c, t, th) = sendMessageHooks.foldLeft((channelId, text, threadId)) { case ((channelId, text, threadId), hook) =>
       hook(channelId, text, threadId)
     }
 

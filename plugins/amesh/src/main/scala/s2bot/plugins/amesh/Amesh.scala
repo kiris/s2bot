@@ -1,19 +1,19 @@
 package s2bot.plugins.amesh
 
 import java.time.temporal.ChronoUnit
-import java.time.{LocalDateTime, ZoneId, ZonedDateTime}
+import java.time.{LocalDateTime, ZoneId}
 
 import akka.actor.ActorSystem
 import com.sksamuel.scrimage.Image
 import com.sksamuel.scrimage.composite.AlphaComposite
 import dispatch._
-import s2bot.buildin.Helpable.{DefaultKeys, Usage}
 import s2bot.plugins.buildin.Helpable
+import s2bot.plugins.buildin.Helpable.{DefaultKeys, Usage}
 import s2bot.{S2Bot, Script}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class TokyoAmesh(implicit system: ActorSystem) extends Script with Helpable {
+class Amesh(implicit system: ActorSystem) extends Script with Helpable {
 
   implicit private val ec: ExecutionContext = system.dispatcher
 
@@ -44,7 +44,7 @@ class TokyoAmesh(implicit system: ActorSystem) extends Script with Helpable {
   }
 
   private[amesh] def amesh(dateTime: LocalDateTime): Future[Image] = {
-    val n = dateTime.minus((dateTime.getMinute % 5) + 5, ChronoUnit.MINUTES)
+    val n = dateTime.minus((dateTime.getMinute % 5) + 5L, ChronoUnit.MINUTES)
     val str = "%tY%<tm%<td%<tH%<tM".format(n)
     for {
       imageMsk <- getImage("http://tokyo-ame.jwa.or.jp/map/msk000.png")

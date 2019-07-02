@@ -44,7 +44,7 @@ class GoogleImageSearch(cseId: String, apiKey: String)(implicit executionContext
     } yield ()
 
 
-  private[this] def ensureResult(url: String, animate: Boolean) =
+  private[this] def ensureResult(url: String, animate: Boolean): String =
     ensureImageExtension(
       if (animate) {
         url.replaceAll("(giphy\\.com/.*)/.+_s.gif$", "$1/giphy.gif")
@@ -53,11 +53,11 @@ class GoogleImageSearch(cseId: String, apiKey: String)(implicit executionContext
       }
     )
 
-  private[this] def ensureImageExtension(url: String) =
+  private[this] def ensureImageExtension(url: String): String =
     if (url.matches(".+(png|jpe?g|gif)$")) {
       url
     } else {
-      s"${url}#.png"
+      s"$url#.png"
     }
 }
 
@@ -65,6 +65,6 @@ class GoogleImageSearch(cseId: String, apiKey: String)(implicit executionContext
 object GoogleImageSearch {
   def apply(config: Config)(implicit executionContext: ExecutionContext): GoogleImageSearch = new GoogleImageSearch(
     cseId = config.getString("s2bot.plugins.googleImageSearch.cseId"),
-    apiKey = config.getString("s2bot.plugins.googleImageSearch.apiKey"),
+    apiKey = config.getString("s2bot.plugins.googleImageSearch.apiKey")
   )
 }
