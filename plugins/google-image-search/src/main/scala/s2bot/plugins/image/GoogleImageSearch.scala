@@ -4,6 +4,7 @@ import com.typesafe.config.Config
 import s2bot.{S2Bot, Script}
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
+import s2bot.plugins.image.CustomSearchClient.Image
 import slack.models.Message
 
 import scala.concurrent.{ExecutionContext, Future}
@@ -37,12 +38,15 @@ class GoogleImageSearch(cseId: String, apiKey: String)(implicit executionContext
   private[this] def imageSearch(bot: S2Bot, message: Message, q: String, animate: Boolean = false): Future[Unit] =
     for {
       images <- customSearchClient.searchImage(q, animate = animate)
-      _ <- Random.shuffle(images).headOption match {
+      _ <- Random.shuffle(images.filter(filterImage)).headOption match {
         case None => bot.say(message, s"画像がみつからなかったよ")
         case Some(image) => bot.say(message, ensureResult(image.link, animate))
       }
     } yield ()
 
+  private[this] def filterImage(image: Image): Boolean = {
+    !image.link.endsWith(".svg")
+  }
 
   private[this] def ensureResult(url: String, animate: Boolean): String =
     ensureImageExtension(
