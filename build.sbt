@@ -45,8 +45,10 @@ lazy val modules: Seq[ProjectReference] = Seq(
   brainPlayJsonExtension,
   redisBrainExtension,
   choicePlugin,
+  youbiPlugin,
   newChannelsPlugin,
   newEmojisPlugin,
+  hotTopicsPlugin,
   ameshPlugin,
   googleImageSearchPlugin,
   deleteMessagePlugin,
@@ -135,6 +137,15 @@ lazy val choicePlugin = (project in file("plugins/choice"))
       core % "test->test;compile->compile"
     )
 
+lazy val youbiPlugin = (project in file("plugins/youbi"))
+    .settings(baseSettings)
+    .settings(
+      name := "youbi-plugin"
+    )
+    .dependsOn(
+      core % "test->test;compile->compile"
+    )
+
 lazy val newChannelsPlugin = (project in file("plugins/new-channels"))
     .settings(baseSettings)
     .settings(
@@ -154,6 +165,15 @@ lazy val newEmojisPlugin = (project in file("plugins/new-emojis"))
       brainExtension % "test->test;compile->compile",
       brainPlayJsonExtension  % "test->test;compile->compile",
       cronJobExtension % "test->test;compile->compile"
+    )
+
+lazy val hotTopicsPlugin = (project in file("plugins/hot-topics"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-hot-topics-plugin"
+    )
+    .dependsOn(
+      core % "test->test;compile->compile"
     )
 
 lazy val ameshPlugin = (project in file("plugins/amesh"))
