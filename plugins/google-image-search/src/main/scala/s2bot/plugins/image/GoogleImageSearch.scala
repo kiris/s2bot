@@ -10,9 +10,7 @@ import slack.models.Message
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
-class GoogleImageSearch(cseId: String, apiKey: String)(implicit executionContext: ExecutionContext) extends Script with Helpable {
-
-  private val customSearchClient = new CustomSearchClient(cseId, apiKey)
+class GoogleImageSearch(customSearchClient: CustomSearchClient)(implicit executionContext: ExecutionContext) extends Script with Helpable {
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.COMMANDS -> List(
@@ -67,8 +65,14 @@ class GoogleImageSearch(cseId: String, apiKey: String)(implicit executionContext
 
 
 object GoogleImageSearch {
-  def apply(config: Config)(implicit executionContext: ExecutionContext): GoogleImageSearch = new GoogleImageSearch(
-    cseId = config.getString("s2bot.plugins.googleImageSearch.cseId"),
+  def apply(config: Config)(implicit executionContext: ExecutionContext): GoogleImageSearch = apply(
+    searchEngineId = config.getString("s2bot.plugins.googleImageSearch.searchEngineId"),
     apiKey = config.getString("s2bot.plugins.googleImageSearch.apiKey")
+  )
+
+
+
+  def apply(searchEngineId: String, apiKey: String)(implicit executionContext: ExecutionContext): GoogleImageSearch = new GoogleImageSearch(
+    new CustomSearchClient(searchEngineId, apiKey)
   )
 }

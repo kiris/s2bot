@@ -10,7 +10,7 @@ import s2bot.{Fmt, S2Bot, Script}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NewEmojis[A : Brain : ({type F[X] = Codec[Set[String],X]})#F](channelName: String)(implicit system: ActorSystem) extends Script with Helpable {
+class NewEmojis[A : Brain : ({type F[X] = Codec[Set[String],X]})#F](channelName: String = "new-emojis")(implicit system: ActorSystem) extends Script with Helpable {
 
   private implicit val ec: ExecutionContext = system.dispatcher
 

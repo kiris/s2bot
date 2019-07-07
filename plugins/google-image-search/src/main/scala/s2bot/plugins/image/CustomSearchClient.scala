@@ -5,9 +5,7 @@ import s2bot.plugins.image.CustomSearchClient._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class CustomSearchClient(cseId: String, apiKey: String)(implicit executionContext: ExecutionContext) {
-
-
+class CustomSearchClient(searchEngineId: String, apiKey: String)(implicit executionContext: ExecutionContext) {
   def searchImage(
       q: String,
       safe: Safe = High,
@@ -39,7 +37,7 @@ class CustomSearchClient(cseId: String, apiKey: String)(implicit executionContex
     val req =
       url(endpoint)
           .setQueryParameters(query.mapValues(Seq(_)))
-          .addQueryParameter("cx", cseId)
+          .addQueryParameter("cx", searchEngineId)
           .addQueryParameter("key", apiKey)
           .GET
 

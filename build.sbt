@@ -49,15 +49,16 @@ lazy val modules: Seq[ProjectReference] = Seq(
   newEmojisPlugin,
   ameshPlugin,
   googleImageSearchPlugin,
-  deleteMessagePlugin
+  deleteMessagePlugin,
 )
 
-lazy val `s2bot-root` = (project in file("."))
+lazy val all = (project in file("."))
     .settings(baseSettings)
     .settings(
-      publish := {} // no publish
+      name := "s2bot-all"
     )
     .aggregate(modules: _*)
+    .dependsOn(modules.map(_ % "test->test;compile->compile"): _*)
 
 lazy val core = (project in file("core"))
     .settings(baseSettings)
