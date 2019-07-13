@@ -1,21 +1,21 @@
 package s2bot.plugins.welcome
 
-import com.typesafe.config.Config
+import s2bot.extensions.brain.Brain._
 import s2bot.extensions.brain.{Brain, Codec}
-import s2bot.{Fmt, S2Bot, Script}
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
-import slack.models.{MemberJoined, Message}
+import s2bot.plugins.welcome.WelcomeChannel._
+import s2bot.{Fmt, S2Bot, Script}
+import slack.models.MemberJoined
 
 import scala.concurrent.Future
-import WelcomeChannel._
-import Brain._
 
 class WelcomeChannel[A : Brain : C](brainKey: String = "welcome-channel") extends Script with Helpable {
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.COMMANDS -> List(
-      s"welcome <message> - このチャンネルに新しいユーザーがジョインしたら<message>を表示します"
+      s"welcome <message> - このチャンネルに新しいユーザーがジョインしたウェルカムメッセージを表示します",
+      s"welcome - 現在このチャンネルに設定されている、ウェルカムメッセージを表示します"
     )
   )
 

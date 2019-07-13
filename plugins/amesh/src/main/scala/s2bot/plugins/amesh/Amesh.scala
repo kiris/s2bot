@@ -27,11 +27,17 @@ class Amesh(implicit system: ActorSystem) extends Script with Helpable {
     bot.hear {
       case ("amesh", msg) =>
         val now = LocalDateTime.now(ZoneId.of("Asia/Tokyo"))
+        val filename = s"${"%tY/%<tm/%<td %<tH:%<tM".format(now)}.png"
+        val formattedDateTime = "%tY年%<tm月%<td日 %<tH:%<tM".format(now)
+        val comment = s"""時刻: $formattedDateTime
+                         |公式: http://tokyo-ame.jwa.or.jp/""".stripMargin
         for {
           ameshImage <- amesh(now)
           _ <- bot.web.uploadFile(
             content = Right(ameshImage.bytes),
-            filename = Some(s"${"%tY/%<tm/%<td %<tH:%<tM".format(now)}.png"),
+            title = Some(filename),
+            filename = Some(filename),
+            initialComment = Some(comment),
             channels = Some(Seq(msg.channel))
           )
         } yield ()
