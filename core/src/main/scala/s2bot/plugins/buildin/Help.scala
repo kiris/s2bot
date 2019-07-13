@@ -26,8 +26,7 @@ object Help extends Script with Helpable {
     usages.values.map { case (key, value) =>
       s"""
          |*<$key>*
-         |${value.map("* " + _).mkString("\n")}
-       """.stripMargin
+         |${value.map("* " + _).mkString("\n")}""".stripMargin
     }.mkString("\n\n")
 
   protected val HELP_PATTERN: String = "help"

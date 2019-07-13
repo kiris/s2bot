@@ -12,16 +12,16 @@ class NewChannels(channelName: String = "new-channels") extends Script with Help
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.CHANNELS -> List(
-      s"${Fmt.linkChannelForName(bot, channelName)} - 新しいチャンネルが作られら通知します"
+      s"${Fmt.linkChannelForName(bot, channelName)} - 新しいチャンネルが作られたら通知します"
     )
   )
 
   override def apply(bot: S2Bot): Unit =
     bot.onEvent {
-      case (ChannelCreated(channel)) =>
+      case ChannelCreated(channel) =>
         bot.getChannelIdForName(channelName) match {
           case Some(channelId) => bot.say(channelId, s"新しいチャンネル ${Fmt.linkChannel(channel)} が作られたよ")
-          case None => Future.successful(())
+          case None => Future.unit
         }
     }
 }

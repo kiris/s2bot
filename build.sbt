@@ -212,3 +212,15 @@ lazy val deleteMessagePlugin = (project in file("plugins/delete-message"))
     .dependsOn(
       core % "test->test;compile->compile"
     )
+
+lazy val welcomeChannelPlugin = (project in file("plugins/welcome-channel"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-welcome-channel-plugin",
+      libraryDependencies ++= Seq(
+      )
+    )
+    .dependsOn(
+      core % "test->test;compile->compile",
+      brainExtension % "test->test;compile->compile"
+    )
