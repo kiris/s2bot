@@ -224,3 +224,15 @@ lazy val welcomeChannelPlugin = (project in file("plugins/welcome-channel"))
       core % "test->test;compile->compile",
       brainExtension % "test->test;compile->compile"
     )
+
+lazy val myResponsePlugin = (project in file("plugins/my-response"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-my-response-plugin",
+      libraryDependencies ++= Seq(
+      )
+    )
+    .dependsOn(
+      core % "test->test;compile->compile",
+      brainExtension % "test->test;compile->compile"
+    )
