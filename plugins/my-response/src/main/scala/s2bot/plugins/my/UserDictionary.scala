@@ -6,20 +6,20 @@ import s2bot.extensions.brain.Brain._
 import s2bot.extensions.brain.{Brain, Codec}
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
-import s2bot.plugins.my.MyResponse._
+import s2bot.plugins.my.UserDictionary._
 import s2bot.{S2Bot, Script}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class MyResponse[B : Brain : C](brainKey: String = "my-response")(implicit system: ActorSystem) extends Script with Helpable {
+class UserDictionary[B : Brain : C](brainKey: String = "my-response")(implicit system: ActorSystem) extends Script with Helpable {
     implicit private val ec: ExecutionContext = system.dispatcher
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.COMMANDS -> List(
-      "my list - メッセージを登録したキーワードの一覧を返します",
-      "my <keyword> - <keyword>に登録したメッセージを返します",
-      "my <keyword> <message> - <keyword>にメッセージを登録します",
-      "my <keyword> del - <keyword>に登録したメッセージを削除します"
+      "my list - ユーザー辞書に登録されているキーワードの一覧を返します",
+      "my <keyword> - ユーザー辞書の<keyword>に登録されたメッセージを返します",
+      "my <keyword> <message> - ユーザー辞書の<keyword>に<message>を登録します",
+      "my <keyword> del - ユーザー辞書の<keyword>を削除します"
     )
   )
 
@@ -109,7 +109,7 @@ class MyResponse[B : Brain : C](brainKey: String = "my-response")(implicit syste
   }
 }
 
-private object MyResponse {
+private object UserDictionary {
   val BRAIN_KEY = "my-response"
 
   val LIST_KEYWORDS_PATTERN = "my list"

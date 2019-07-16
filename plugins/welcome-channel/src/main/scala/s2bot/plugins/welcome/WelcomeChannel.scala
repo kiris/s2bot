@@ -64,10 +64,7 @@ class WelcomeChannel[A : Brain : C](brainKey: String = "welcome-channel") extend
 
         message match {
           case Some(m) =>
-            bot.say(channelId,
-              s"""${Fmt.linkUser(userId)} ${Fmt.linkChannel(channelId)} にようこそ！
-                 |
-                 |$m""".stripMargin)
+            bot.say(channelId, m)
           case None =>
             or()
         }
