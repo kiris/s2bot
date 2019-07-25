@@ -52,6 +52,8 @@ lazy val modules: Seq[ProjectReference] = Seq(
   ameshPlugin,
   googleImageSearchPlugin,
   deleteMessagePlugin,
+  welcomeChannelPlugin,
+  myResponsePlugin
 )
 
 lazy val all = (project in file("."))

@@ -11,7 +11,7 @@ class DeleteMessage(emojiName: String = "delete-action")(implicit system: ActorS
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.REACTIONS -> List(
-      s":$emojiName: - :$emojiName: リアクションが付けられたメッセージを削除します"
+      s":$emojiName: - ${bot.me}が :$emojiName: リアクションが付けると、 @{boられたメッセージを削除します"
     )
   )
 
