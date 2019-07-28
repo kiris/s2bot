@@ -142,7 +142,7 @@ lazy val choicePlugin = (project in file("plugins/choice"))
 lazy val youbiPlugin = (project in file("plugins/youbi"))
     .settings(baseSettings)
     .settings(
-      name := "youbi-plugin"
+      name := "s2bot-youbi-plugin"
     )
     .dependsOn(
       core % "test->test;compile->compile"
