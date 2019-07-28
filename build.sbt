@@ -53,7 +53,7 @@ lazy val modules: Seq[ProjectReference] = Seq(
   googleImageSearchPlugin,
   deleteMessagePlugin,
   welcomeChannelPlugin,
-  myResponsePlugin
+  userDictionaryPlugin
 )
 
 lazy val all = (project in file("."))
@@ -227,10 +227,10 @@ lazy val welcomeChannelPlugin = (project in file("plugins/welcome-channel"))
       brainExtension % "test->test;compile->compile"
     )
 
-lazy val myResponsePlugin = (project in file("plugins/my-response"))
+lazy val userDictionaryPlugin = (project in file("plugins/user-dictionary"))
     .settings(baseSettings)
     .settings(
-      name := "s2bot-my-response-plugin",
+      name := "s2bot-user-dictionary-plugin",
       libraryDependencies ++= Seq(
       )
     )

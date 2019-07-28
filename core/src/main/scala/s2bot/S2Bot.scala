@@ -9,7 +9,12 @@ import slack.rtm.SlackRtmClient
 import scala.concurrent.Future
 import scala.concurrent.duration._
 
-class S2Bot(val scripts: List[Script], token: String, config: Config, duration: FiniteDuration = 5.seconds) {
+case class S2Bot(
+    token: String,
+    config: Config,
+    scripts: List[Script] = Nil,
+    duration: FiniteDuration = 5.seconds
+) {
   implicit private val system = ActorSystem("slack", config)
 
   implicit private val ec = system.dispatcher
@@ -30,7 +35,13 @@ class S2Bot(val scripts: List[Script], token: String, config: Config, duration: 
 
   val me = Fmt.linkUser(self.id)
 
-  def run(): Unit = scripts.foreach(_.apply(this))
+  def addScripts(scripts: Script*): S2Bot = {
+    this.copy(scripts = this.scripts ++ scripts)
+  }
+
+  def run(): Unit = {
+    scripts.foreach(_.apply(this))
+  }
 
   def hear(pf: PartialFunction[(String, Message), Future[Any]]): Unit =
     rtm.onMessage { message =>

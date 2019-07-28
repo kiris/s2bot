@@ -1,5 +1,6 @@
 package s2bot.plugins.welcome
 
+import akka.actor.ActorSystem
 import s2bot.extensions.brain.Brain._
 import s2bot.extensions.brain.{Brain, Codec}
 import s2bot.plugins.buildin.Helpable
@@ -8,9 +9,11 @@ import s2bot.plugins.welcome.WelcomeChannel._
 import s2bot.{Fmt, S2Bot, Script}
 import slack.models.MemberJoined
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
-class WelcomeChannel[A : Brain : C](brainKey: String = "welcome-channel") extends Script with Helpable {
+class WelcomeChannel[A : Brain : DataCodec](brainKey: String = DEFAULT_BRAIN_KEY)(implicit system: ActorSystem) extends Script with Helpable {
+
+  implicit private val ec: ExecutionContext = system.dispatcher
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.COMMANDS -> List(
@@ -44,7 +47,7 @@ class WelcomeChannel[A : Brain : C](brainKey: String = "welcome-channel") extend
 
   private def registerWelcomeMessage(bot: S2Bot, channelId: String, welcomeMessage: String): Future[Unit] = {
     for {
-      messagesOpt <- bot.brain.get(brainKey)[Data]
+      messagesOpt <- bot.brain[A].get(brainKey)
       _ <- {
         val oldWelcomeMessages = messagesOpt.getOrElse(Map.empty)
         val newWelcomeMessages = oldWelcomeMessages + (channelId -> welcomeMessage)
@@ -55,7 +58,7 @@ class WelcomeChannel[A : Brain : C](brainKey: String = "welcome-channel") extend
 
   private def sayWelcome(bot: S2Bot, userId: String, channelId: String)(or: => Future[AnyVal]): Future[AnyVal] = {
     for {
-      messages <- bot.brain.get[Data](brainKey)
+      messages <- bot.brain[A].get(brainKey)
       message <- {
         val message = for {
           messages <- messages
@@ -66,7 +69,7 @@ class WelcomeChannel[A : Brain : C](brainKey: String = "welcome-channel") extend
           case Some(m) =>
             bot.say(channelId, m)
           case None =>
-            or()
+            or
         }
       }
     } yield message
@@ -75,7 +78,10 @@ class WelcomeChannel[A : Brain : C](brainKey: String = "welcome-channel") extend
 
 object WelcomeChannel {
   type Data = Map[String, String]
-  type C[X] = Codec[Data, X]
+
+  type DataCodec[X] = Codec[Data, X]
+
+  val DEFAULT_BRAIN_KEY = "welcome-channel"
 
   val REGISTER_WELCOME_PATTERN = "welcome ([\\s|\\S]+)".r
 }

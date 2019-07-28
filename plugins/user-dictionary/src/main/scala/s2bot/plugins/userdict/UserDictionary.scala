@@ -1,4 +1,4 @@
-package s2bot.plugins.my
+package s2bot.plugins.userdict
 
 
 import akka.actor.ActorSystem
@@ -6,20 +6,21 @@ import s2bot.extensions.brain.Brain._
 import s2bot.extensions.brain.{Brain, Codec}
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
-import s2bot.plugins.my.UserDictionary._
+import s2bot.plugins.userdict.UserDictionary._
 import s2bot.{S2Bot, Script}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class UserDictionary[B : Brain : C](brainKey: String = "my-response")(implicit system: ActorSystem) extends Script with Helpable {
-    implicit private val ec: ExecutionContext = system.dispatcher
+class UserDictionary[A : Brain : DataCodec](brainKey: String = DEFAULT_BRAIN_KEY)(implicit system: ActorSystem) extends Script with Helpable {
+
+  implicit private val ec: ExecutionContext = system.dispatcher
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.COMMANDS -> List(
-      "my list - ユーザー辞書に登録されているキーワードの一覧を返します",
-      "my <keyword> - ユーザー辞書の<keyword>に登録されたメッセージを返します",
-      "my <keyword> <message> - ユーザー辞書の<keyword>に<message>を登録します",
-      "my <keyword> del - ユーザー辞書の<keyword>を削除します"
+      "userdict list - ユーザー辞書に登録されているキーワードの一覧を返します",
+      "userdict <keyword> - ユーザー辞書の<keyword>に登録されたメッセージを返します",
+      "userdict <keyword> <message> - ユーザー辞書の<keyword>に<message>を登録します",
+      "userdict <keyword> del - ユーザー辞書の<keyword>を削除します"
     )
   )
 
@@ -58,21 +59,21 @@ class UserDictionary[B : Brain : C](brainKey: String = "my-response")(implicit s
     }
   }
 
-  private def listKeywords(bot: S2Bot, userId: String): Future[List[String]] = {
+  private def listKeywords(bot: S2Bot, userId: UserId): Future[List[String]] = {
     for {
-      dataOpt <- bot.brain.get(brainKey)[Data]
+      dataOpt <- bot.brain[A].get(brainKey)
     } yield {
       for {
         data <- dataOpt.toList
-        userData <- data.get(userId)
+        userData <- data.get(userId).toList
         keyword <- userData.keys
       } yield keyword
     }
   }
 
-  private def getMyResponse(bot: S2Bot, userId: String, keyword: String): Future[Option[String]] = {
+  private def getMyResponse(bot: S2Bot, userId: UserId, keyword: String): Future[Option[String]] = {
     for {
-      dataOpt <- bot.brain.get(brainKey)[Data]
+      dataOpt <- bot.brain[A].get(brainKey)
     } yield {
       for {
         data <- dataOpt
@@ -82,9 +83,9 @@ class UserDictionary[B : Brain : C](brainKey: String = "my-response")(implicit s
     }
   }
 
-  private def unregisterMyResponse(bot: S2Bot, userId: String, keyword: String): Future[Unit] = {
+  private def unregisterMyResponse(bot: S2Bot, userId: UserId, keyword: String): Future[Unit] = {
     for {
-      dataOpt <- bot.brain.get(brainKey)[Data]
+      dataOpt <- bot.brain[A].get(brainKey)
       _ <- {
         val oldData = dataOpt.getOrElse(Map.empty)
         val oldUserData = oldData.getOrElse(userId, Map.empty)
@@ -95,9 +96,9 @@ class UserDictionary[B : Brain : C](brainKey: String = "my-response")(implicit s
     } yield ()
   }
 
-  private def registerMyResponse(bot: S2Bot, userId: String, keyword: String, response: String): Future[Unit] = {
+  private def registerMyResponse(bot: S2Bot, userId: UserId, keyword: String, response: String): Future[Unit] = {
     for {
-      dataOpt <- bot.brain.get(brainKey)[Data]
+      dataOpt <- bot.brain[A].get(brainKey)
       _ <- {
         val oldData = dataOpt.getOrElse(Map.empty)
         val oldUserData = oldData.getOrElse(userId, Map.empty)
@@ -110,17 +111,19 @@ class UserDictionary[B : Brain : C](brainKey: String = "my-response")(implicit s
 }
 
 private object UserDictionary {
-  val BRAIN_KEY = "my-response"
+  val DEFAULT_BRAIN_KEY = "userdict"
 
-  val LIST_KEYWORDS_PATTERN = "my list"
+  val LIST_KEYWORDS_PATTERN = "userdict list"
 
-  val SHOW_RESPONSE_PATTERN = "my ([^ ]+)".r
+  val SHOW_RESPONSE_PATTERN = "userdict ([^ ]+)".r
 
-  val REGISTER_RESPONSE_PATTERN = "my ([^ ]+) ([\\s|\\S]+)".r
+  val REGISTER_RESPONSE_PATTERN = "userdict ([^ ]+) ([\\s|\\S]+)".r
 
-  val UNREGISTER_RESPONSE_PATTERN = "my ([^ ]+) del".r
+  val UNREGISTER_RESPONSE_PATTERN = "userdict ([^ ]+) del".r
 
-  type Data = Map[String, Map[String, String]]
+  type UserId = String
 
-  type C[X] = Codec[Data, X]
+  type Data = Map[UserId, Map[String, String]]
+
+  type DataCodec[X] = Codec[Data, X]
 }
