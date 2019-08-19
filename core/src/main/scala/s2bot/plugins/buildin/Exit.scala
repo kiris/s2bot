@@ -1,14 +1,14 @@
 package s2bot.plugins.buildin
 
 import s2bot.plugins.buildin.Helpable.{DefaultKeys, Usage}
-import s2bot.{S2Bot, Script}
+import s2bot.{S2Bot, Plugin}
 import slack.models.Message
 
 import scala.concurrent.ExecutionContext
 
-class Exit(implicit ec: ExecutionContext) extends Script with Helpable {
+class Exit(implicit ec: ExecutionContext) extends Plugin with Helpable {
 
-  override def apply(bot: S2Bot): Unit = {
+  override def apply(bot: S2Bot): S2Bot = {
     bot.respond {
       case ("exit", message) =>
         for {

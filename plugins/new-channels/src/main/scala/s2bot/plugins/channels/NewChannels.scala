@@ -1,14 +1,14 @@
 package s2bot.plugins.channels
 
 import com.typesafe.config.Config
-import s2bot.{Fmt, S2Bot, Script}
+import s2bot.{Fmt, S2Bot, Plugin}
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
 import slack.models.ChannelCreated
 
 import scala.concurrent.Future
 
-class NewChannels(channelName: String = "new-channels") extends Script with Helpable {
+class NewChannels(channelName: String = "new-channels") extends Plugin with Helpable {
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.CHANNELS -> List(
@@ -16,7 +16,7 @@ class NewChannels(channelName: String = "new-channels") extends Script with Help
     )
   )
 
-  override def apply(bot: S2Bot): Unit =
+  override def apply(bot: S2Bot): S2Bot =
     bot.onEvent {
       case ChannelCreated(channel) =>
         bot.getChannelIdForName(channelName) match {

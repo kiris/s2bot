@@ -9,11 +9,11 @@ import com.sksamuel.scrimage.composite.AlphaComposite
 import dispatch._
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.{DefaultKeys, Usage}
-import s2bot.{S2Bot, Script}
+import s2bot.{S2Bot, Plugin}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class Amesh(implicit system: ActorSystem) extends Script with Helpable {
+class Amesh(implicit system: ActorSystem) extends Plugin with Helpable {
 
   implicit private val ec: ExecutionContext = system.dispatcher
 
@@ -23,7 +23,7 @@ class Amesh(implicit system: ActorSystem) extends Script with Helpable {
     )
   )
 
-  override def apply(bot: S2Bot): Unit = {
+  override def apply(bot: S2Bot): S2Bot = {
     bot.hear {
       case ("amesh", msg) =>
         val now = LocalDateTime.now(ZoneId.of("Asia/Tokyo"))

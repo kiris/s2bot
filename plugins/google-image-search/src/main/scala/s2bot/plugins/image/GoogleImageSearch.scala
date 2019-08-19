@@ -1,7 +1,7 @@
 package s2bot.plugins.image
 
 import com.typesafe.config.Config
-import s2bot.{S2Bot, Script}
+import s2bot.{S2Bot, Plugin}
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
 import s2bot.plugins.image.CustomSearchClient.Image
@@ -10,12 +10,12 @@ import slack.models.Message
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Random
 
-class GoogleImageSearch(customSearchClient: CustomSearchClient)(implicit executionContext: ExecutionContext) extends Script with Helpable {
+class GoogleImageSearch(customSearchClient: CustomSearchClient)(implicit executionContext: ExecutionContext) extends Plugin with Helpable {
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.COMMANDS -> List(
       "image <query> - 画像を検索して表示します",
-      "anime <query> -  GIFアニメ画像を検索して表示します"
+      "anime <query> - GIFアニメ画像を検索して表示します"
     )
   )
 
@@ -23,7 +23,7 @@ class GoogleImageSearch(customSearchClient: CustomSearchClient)(implicit executi
 
   private val ANIME_PATTERN = "anime (.+)".r
 
-  override def apply(bot: S2Bot): Unit = {
+  override def apply(bot: S2Bot): S2Bot = {
     bot.hear {
       case (IMAGE_PATTERN(q), message) =>
         imageSearch(bot, message, q)

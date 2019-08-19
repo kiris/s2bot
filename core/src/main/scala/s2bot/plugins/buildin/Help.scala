@@ -2,19 +2,19 @@ package s2bot.plugins.buildin
 
 import cats.implicits._
 import Helpable.DefaultKeys
-import s2bot.{S2Bot, Script}
+import s2bot.{S2Bot, Plugin}
 
-object Help extends Script with Helpable {
+object Help extends Plugin with Helpable {
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.COMMANDS -> List(
       s"${bot.me} help - print this message."
     )
   )
 
-  def apply(bot: S2Bot): Unit = {
+  def apply(bot: S2Bot): S2Bot = {
     bot.respond {
       case (HELP_PATTERN, message) =>
-        val usages = bot.scripts.collect {
+        val usages = bot.plugins.collect {
           case h: Helpable => h.usage(bot)
         }.foldLeft(Helpable.Usage.empty)(_ + _)
 

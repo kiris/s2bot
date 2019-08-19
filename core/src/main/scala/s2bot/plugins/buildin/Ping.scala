@@ -1,12 +1,12 @@
 package s2bot.plugins.buildin
 
 import s2bot.plugins.buildin.Helpable.{DefaultKeys, Usage}
-import s2bot.{S2Bot, Script}
+import s2bot.{S2Bot, Plugin}
 import slack.models.Message
 
-object Ping extends Script with Helpable {
+object Ping extends Plugin with Helpable {
 
-  override def apply(bot: S2Bot): Unit = {
+  override def apply(bot: S2Bot): S2Bot = {
     bot.respond {
       case ("ping", message) =>
         bot.reply(message, responsePong(message))

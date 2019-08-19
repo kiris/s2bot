@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
 import s2bot.plugins.youbi.Youbi.YOUBI_PATTERN
-import s2bot.{S2Bot, Script}
+import s2bot.{S2Bot, Plugin}
 
 import scala.concurrent.ExecutionContext
 
@@ -14,11 +14,11 @@ class Youbi(
     wednesdayEmoji: String = "sui",
     thursdayEmoji: String = "moku",
     fridayEmoji: String = "kin"
-)(implicit system: ActorSystem) extends Script with Helpable {
+)(implicit system: ActorSystem) extends Plugin with Helpable {
 
   implicit private val ec: ExecutionContext = system.dispatcher
 
-  override def apply(bot: S2Bot): Unit = {
+  override def apply(bot: S2Bot): S2Bot = {
     bot.hear {
       case (YOUBI_PATTERN(), msg) =>
         for {

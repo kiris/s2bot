@@ -6,11 +6,11 @@ import s2bot.extensions.brain.Brain._
 import s2bot.extensions.cron.CronJob._
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
-import s2bot.{Fmt, S2Bot, Script}
+import s2bot.{Fmt, S2Bot, Plugin}
 
 import scala.concurrent.{ExecutionContext, Future}
 
-class NewEmojis[A : Brain : ({type F[X] = Codec[Set[String],X]})#F](channelName: String = "new-emojis")(implicit system: ActorSystem) extends Script with Helpable {
+class NewEmojis[A : Brain : ({type F[X] = Codec[Set[String],X]})#F](channelName: String = "new-emojis")(implicit system: ActorSystem) extends Plugin with Helpable {
 
   private implicit val ec: ExecutionContext = system.dispatcher
 
@@ -20,8 +20,8 @@ class NewEmojis[A : Brain : ({type F[X] = Codec[Set[String],X]})#F](channelName:
     )
   )
 
-  override def apply(bot: S2Bot): Unit = {
-    bot.job("Every minute") {
+  override def apply(bot: S2Bot): S2Bot = {
+    bot.cronJob("Every minute") {
       notifyNewEmojis(bot)
     }
   }

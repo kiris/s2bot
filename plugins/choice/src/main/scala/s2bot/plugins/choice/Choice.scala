@@ -2,14 +2,14 @@ package s2bot.plugins.choice
 
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
-import s2bot.{S2Bot, Script}
+import s2bot.{S2Bot, Plugin}
 import slack.models.Message
 
 import scala.concurrent.Future
 import scala.util.Random
 import scala.util.matching.Regex
 
-class Choice() extends Script with Helpable {
+class Choice() extends Plugin with Helpable {
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.COMMANDS -> List(
       s"choice A B C ... - 指定された単語から1個をランダムに選びます",
@@ -18,7 +18,7 @@ class Choice() extends Script with Helpable {
     )
   )
 
-  override def apply(bot: S2Bot): Unit = {
+  override def apply(bot: S2Bot): S2Bot = {
     bot.hear {
       case (SHUFFLE_PATTERN(words), msg) =>
         shuffle(bot, words, msg)
