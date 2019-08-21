@@ -4,7 +4,7 @@ import slack.models.{Channel, User}
 
 object Fmt {
 
-  def linkMessageUrl(bot: S2Bot, channelId: String, ts: String): String = s"https://${bot.state.team.domain}.slack.com/archives/$channelId/p${ts.replaceAll("\\.", "")}"
+  def linkMessageUrl(bot: S2Bot, channelId: String, ts: String): String = s"https://${bot.rtmState.team.domain}.slack.com/archives/$channelId/p${ts.replaceAll("\\.", "")}"
 
   def linkChannel(channelId: String): String = s"<#$channelId>"
 

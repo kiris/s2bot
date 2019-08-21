@@ -10,8 +10,30 @@ import slack.rtm.{RtmState, SlackRtmClient}
 import scala.concurrent.{Await, Future}
 import scala.concurrent.duration._
 
+class SlackClient(
+    val rtm: SlackRtmClient,
+    val web: SlackApiClient,
+    val actorSystem: ActorSystem
+)
+
+object SlackClient {
+  def factory(
+      token: String,
+      duration: FiniteDuration = 5.seconds,
+      config: Config
+  ): SlackClient = {
+    implicit val system: ActorSystem = ActorSystem("slack", config)
+
+    new SlackClient(
+      rtm = SlackRtmClient(token = token, duration = duration),
+      web = SlackApiClient(token),
+      actorSystem = system
+    )
+  }
+}
+
 case class S2Bot(
-    token: String,
+    private val client: SlackClient,
     config: Config,
     plugins: List[Plugin] = Nil,
     hearHandlers: List[MessageHandler] = Nil,
@@ -20,21 +42,21 @@ case class S2Bot(
     errorHandlers: List[ErrorHandler] = Nil,
     scripts: List[Script] = Nil,
     sendMessageHooks: List[SendMessageHook] = Nil,
-    duration: FiniteDuration = 5.seconds
 ) {
-  implicit private val system = ActorSystem("slack", config)
 
-  implicit private val ec = system.dispatcher
+  implicit private def actorSystem = client.actorSystem
 
-  val rtm: SlackRtmClient = SlackRtmClient(token = token, duration = duration)
+  implicit private def ec = client.actorSystem.dispatcher
 
-  val web: SlackApiClient = SlackApiClient(token)
+  def rtm: SlackRtmClient = client.rtm
 
-  def state: RtmState = rtm.state
+  def web: SlackApiClient = client.web
 
-  def self: User = state.self
+  def rtmState: RtmState = rtm.state
 
-  val me: String = Fmt.linkUser(self.id)
+  def self: User = rtmState.self
+
+  def me: String = Fmt.linkUser(self.id)
 
   def addPlugins(plugins: Plugin*): S2Bot = this.copy(plugins = this.plugins ++ plugins)
 
@@ -70,13 +92,13 @@ case class S2Bot(
 
   def reaction(message: Message, emojiName: String): Future[Boolean] = reaction(message.channel, message.ts, emojiName)
 
-  def getChannelIdForName(name: String): Option[String] = state.getChannelIdForName(name)
+  def getChannelIdForName(name: String): Option[String] = rtmState.getChannelIdForName(name)
 
-  def getUserIdForName(name: String): Option[String] = state.getUserIdForName(name)
+  def getUserIdForName(name: String): Option[String] = rtmState.getUserIdForName(name)
 
-  def getUser(id: String): Option[User] = state.getUserById(id)
+  def getUser(id: String): Option[User] = rtmState.getUserById(id)
 
-  def getChannel(id: String): Option[Channel] = state.channels.find(_.id == id)
+  def getChannel(id: String): Option[Channel] = rtmState.channels.find(_.id == id)
 
   private def applyPlugins(): S2Bot = {
     plugins.foldLeft(this) { (s2bot, plugin) =>
@@ -125,7 +147,6 @@ case class S2Bot(
 
     ()
   }
-
 
   def recoverErrors(f: Future[Any]): Unit = {
     for {
