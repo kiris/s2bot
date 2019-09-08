@@ -16,7 +16,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.matching.Regex
 
 class Uranai(
-    birthDayProvider: Option[Message => Future[Option[MonthDay]]] = None
+    birthDayProvider: Message => Future[Option[MonthDay]] = _ => Future.successful(None)
 )(implicit system: ActorSystem) extends Plugin with Helpable {
 
   import Uranai._
@@ -53,27 +53,21 @@ class Uranai(
     }
 
     bot.hear {
+      case ("uranai", msg) =>
+        for {
+          birthDayOpt <- birthDayProvider(msg)
+          _ <- birthDayOpt match {
+            case Some(birthDay) =>
+              uranai(msg, birthDay)
+
+            case None =>
+              Future.unit
+          }
+        } yield ()
+
       case (URANAI_PATTERN(month, day), msg) =>
         val birthDay = MonthDay.of(month.toInt, day.toInt)
         uranai(msg, birthDay)
-
-      case ("uranai", msg) =>
-        birthDayProvider match {
-          case Some(provider) =>
-            for {
-              birthDayOpt <- provider(msg)
-              _ <- birthDayOpt match {
-                case Some(birthDay) =>
-                  uranai(msg, birthDay)
-
-                case None =>
-                  Future.unit
-              }
-            } yield ()
-
-          case None =>
-            Future.unit
-        }
     }
   }
 
@@ -103,7 +97,7 @@ class Uranai(
 
 object Uranai {
 
-  val URANAI_PATTERN: Regex = "uranai\\s*(\\d{1,2})[ /-]?(\\d{1,2})".r
+  val URANAI_PATTERN: Regex = "uranai\\s*(\\d\\d?)[ /-]?(\\d\\d?)".r
 
   case class Horoscope(
       total: Int,
