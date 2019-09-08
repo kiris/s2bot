@@ -57,5 +57,16 @@ object Helpable {
     val CHANNELS = "channels"
     val ACTIONS = "actions"
     val REACTIONS = "reactions"
+
+
+    def commands(args: String*): (String, List[String]) = COMMANDS -> args.toList
+
+    def jobs(args: String*): (String, List[String]) = JOBS -> args.toList
+
+    def channels(args: String*): (String, List[String]) = CHANNELS -> args.toList
+
+    def actions(args: String*): (String, List[String]) = ACTIONS -> args.toList
+
+    def reactions(args: String*): (String, List[String]) = REACTIONS -> args.toList
   }
 }

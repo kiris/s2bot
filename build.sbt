@@ -2,6 +2,8 @@ import sbt.Keys.libraryDependencies
 
 val Scala212 = "2.12.8"
 
+val circeVersion = "0.11.1"
+
 lazy val baseSettings = Seq(
   homepage := Some(url("http://github.com/kiris/s2bot")),
   licenses := Seq("APL2" -> url("http://www.apache.org/licenses/LICENSE-2.0.txt")),
@@ -50,6 +52,7 @@ lazy val modules: Seq[ProjectReference] = Seq(
   newEmojisPlugin,
   hotTopicsPlugin,
   ameshPlugin,
+  uranaiPlugin,
   googleImageSearchPlugin,
   deleteMessagePlugin,
   welcomeChannelPlugin,
@@ -192,6 +195,22 @@ lazy val ameshPlugin = (project in file("plugins/amesh"))
     .dependsOn(
       core % "test->test;compile->compile"
     )
+
+lazy val uranaiPlugin = (project in file("plugins/uranai"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-uranai-plugin",
+      libraryDependencies ++= Seq(
+        "net.databinder.dispatch" %% "dispatch-core" % "0.13.3",
+        "io.circe" %% "circe-core" % circeVersion,
+        "io.circe" %% "circe-generic" % circeVersion,
+        "io.circe" %% "circe-parser" % circeVersion
+      )
+    )
+    .dependsOn(
+      core % "test->test;compile->compile"
+    )
+
 
 lazy val googleImageSearchPlugin = (project in file("plugins/google-image-search"))
     .settings(baseSettings)
