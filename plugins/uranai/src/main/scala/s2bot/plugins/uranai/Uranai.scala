@@ -39,16 +39,14 @@ class Uranai(
       val now = ZonedDateTime.now()
       for {
         horoscope <- getHoroscope(now, birthDay)
-        _ <- bot.say(msg, s"""```
-                             |${horoscope.rank}位 ${horoscope.sign}
+        _ <- bot.say(msg, s"""${horoscope.rank}位 ${horoscope.sign}
                              |総合: ${star(horoscope.total)}
                              |恋愛運: ${star(horoscope.love)}
                              |金運: ${star(horoscope.money)}
                              |仕事運: ${star(horoscope.job)}
                              |ラッキーカラー: ${horoscope.color}
                              |ラッキーアイテム: ${horoscope.item}
-                             |${horoscope.content}
-                             |```""".stripMargin)
+                             |${horoscope.content}""".stripMargin)
       } yield ()
     }
 
@@ -77,12 +75,12 @@ class Uranai(
       horoscopes <- request(now)
     } yield {
       val constellation = Constellation.find(birthday)
-      horoscopes(Constellation.index(constellation))
+      horoscopes((Constellation.index(constellation) + 9) % 12)
     }
   }
 
   private def request(now: ZonedDateTime): Future[List[Horoscope]] = {
-    val today = now.format(DateTimeFormatter.ISO_DATE)
+    val today = now.format(dateFormatter)
     val req = url(s"http://api.jugemkey.jp/api/horoscope/free/$today")
     Http.default(req OK as.String).flatMap { body =>
       Future.fromTry {
@@ -96,6 +94,9 @@ class Uranai(
 }
 
 object Uranai {
+
+  val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd")
+
 
   val URANAI_PATTERN: Regex = "uranai\\s*(\\d\\d?)[ /-]?(\\d\\d?)".r
 
