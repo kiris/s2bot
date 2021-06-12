@@ -44,7 +44,7 @@ class Choice() extends Plugin with Helpable {
   }
 
   private def parse(words: String): Seq[String] = {
-    words.split(" ").toList.filter(_.nonEmpty)
+    words.split(Array(' ', ',')).toList.filter(_.nonEmpty)
   }
 
   protected val CHOICE_PATTERN: Regex = "choice (.+)".r

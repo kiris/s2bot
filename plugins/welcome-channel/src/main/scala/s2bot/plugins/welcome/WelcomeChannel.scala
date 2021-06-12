@@ -17,23 +17,23 @@ class WelcomeChannel[A : Brain : DataCodec](brainKey: String = DEFAULT_BRAIN_KEY
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.COMMANDS -> List(
-      s"welcome <message> - このチャンネルの、ウェルカムメッセージを設定します",
-      s"welcome clear - このチャンネルの、ウェルカムメッセージを削除します",
-      s"welcome - このチャンネルの、ウェルカムメッセージを表示します"
+      s"welcome-channel <message> - このチャンネルの、ウェルカムメッセージを設定します",
+      s"welcome-channel clear - このチャンネルの、ウェルカムメッセージを削除します",
+      s"welcome-channel - このチャンネルの、ウェルカムメッセージを表示します"
     )
   )
 
   override def apply(bot: S2Bot): S2Bot = {
     bot.hear {
-      case ("welcome", message) =>
+      case ("welcome-channel", message) =>
         sayWelcome(bot, message.user, message.channel) {
           bot.reply(message,
             s"""${Fmt.linkChannel(message.channel)} にウェルカムメッセージは登録されてないよ。
                |
-               |もしウェルカムメッセージを登録したい場合は `welcome <message>` で登録してね。""".stripMargin)
+               |もしウェルカムメッセージを登録したい場合は `welcome-channel <message>` で登録してね。""".stripMargin)
         }
 
-      case ("welcome clear", message) =>
+      case ("welcome-channel clear", message) =>
         for {
           _ <- clearWelcomeMessage(bot, message.channel)
           _ <- bot.say(message, "このチャンネルのウェルカムメッセージを削除したよ")
@@ -99,5 +99,5 @@ object WelcomeChannel {
 
   val DEFAULT_BRAIN_KEY = "welcome-channel"
 
-  val REGISTER_WELCOME_PATTERN = "welcome ([\\s|\\S]+)".r
+  val REGISTER_WELCOME_PATTERN = "welcome-channel ([\\s|\\S]+)".r
 }
