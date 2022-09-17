@@ -26,11 +26,15 @@ lazy val baseSettings = Seq(
     "-Xfatal-warnings"
   ),
   libraryDependencies := Seq(
-    "org.typelevel" %% "cats-core" % "2.0.0-M1",
-    "org.scalactic" %% "scalactic" % "3.0.1",
-    "org.scalatest" %% "scalatest" % "3.0.1" % "test"
+    "org.typelevel" %% "cats-core" % "2.8.0",
+    "org.scalactic" %% "scalactic" % "3.2.13",
+    "org.scalatest" %% "scalatest" % "3.2.13" % "test"
 
   ),
+  dependencyOverrides := Seq(
+    "org.scala-lang.modules" %% "scala-java8-compat" % "1.0.2"
+  ),
+
   parallelExecution in ThisBuild := false,
   publishArtifact in packageDoc := false,
 
@@ -73,25 +77,22 @@ lazy val core = (project in file("core"))
       name := "s2bot-core",
       resolvers ++= Seq(
         "Sonatype releases" at "https://oss.sonatype.org/content/repositories/releases/",
-        "Typesafe Repo" at "http://repo.typesafe.com/typesafe/releases/"
+        "Typesafe Repo" at "https://repo.typesafe.com/typesafe/releases/"
       ),
       libraryDependencies ++= Seq(
-        "com.github.slack-scala-client" %% "slack-scala-client" % "0.2.6",
-        "com.typesafe.akka" %% "akka-actor" % "2.4.14",
-        "com.typesafe.akka" %% "akka-http-core" % "10.0.11"
-      )
+        "com.github.slack-scala-client" %% "slack-scala-client" % "0.3.1",
+        "com.typesafe.akka" %% "akka-actor" % "2.6.20",
+        "com.typesafe.akka" %% "akka-http-core" % "10.2.10"
+      ),
     )
 
 lazy val cronJobExtension = (project in file("extensions/cron-job"))
     .settings(baseSettings)
     .settings(
       name := "s2bot-cron-job-extension",
-      resolvers ++= Seq(
-        "cronish" at "https://kiris.github.io/cronish/repo/",
-        "scalender" at "https://kiris.github.io/scalender/repo/",
-      ),
       libraryDependencies ++= Seq(
-        "com.github.philcali" %% "cronish" % "0.1.5"
+        "com.frograms" %% "cronish" % "0.1.5-FROGRAMS",
+        "com.frograms" %% "scalendar" % "0.1.5-FROGRAMS"
       )
     )
     .dependsOn(
@@ -113,7 +114,7 @@ lazy val brainPlayJsonExtension = (project in file("extensions/brain-play-json")
     .settings(
       name := "s2bot-brain-play-json-extension",
       libraryDependencies ++= Seq(
-        "com.typesafe.play" %% "play-json" % "2.6.7"
+        "com.typesafe.play" %% "play-json" % "2.9.3"
       )
     )
     .dependsOn(
@@ -125,7 +126,7 @@ lazy val redisBrainExtension = (project in file("extensions/redis-brain"))
     .settings(
       name := "s2bot-redis-brain-extension",
       libraryDependencies ++= Seq(
-        "com.github.etaty" %% "rediscala" % "1.8.0"
+        "com.github.etaty" %% "rediscala" % "1.9.0"
       )
     )
     .dependsOn(
@@ -189,7 +190,7 @@ lazy val ameshPlugin = (project in file("plugins/amesh"))
         "com.sksamuel.scrimage" %% "scrimage-core" % "2.1.8",
         "com.sksamuel.scrimage" %% "scrimage-io-extra" % "2.1.8",
         "com.sksamuel.scrimage" %% "scrimage-filters" % "2.1.8",
-        "net.databinder.dispatch" %% "dispatch-core" % "0.13.3"
+        "net.databinder.dispatch" %% "dispatch-core" % "0.13.4"
       )
     )
     .dependsOn(
@@ -217,7 +218,7 @@ lazy val googleImageSearchPlugin = (project in file("plugins/google-image-search
     .settings(
       name := "s2bot-google-image-search-plugin",
       libraryDependencies ++= Seq(
-        "net.databinder.dispatch" %% "dispatch-core" % "0.13.3",
+        "net.databinder.dispatch" %% "dispatch-core" % "0.13.4",
         "com.github.etaty" %% "rediscala" % "1.8.0"
       )
     )
