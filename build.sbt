@@ -1,6 +1,7 @@
 import sbt.Keys.libraryDependencies
 
-val Scala212 = "2.12.8"
+val Scala212 = "2.12.17"
+val AkkaVersion = "2.6.20"
 
 lazy val baseSettings = Seq(
   homepage := Some(url("http://github.com/kiris/s2bot")),
@@ -78,7 +79,10 @@ lazy val core = (project in file("core"))
       ),
       libraryDependencies ++= Seq(
         "com.github.slack-scala-client" %% "slack-scala-client" % "0.3.1",
-        "com.typesafe.akka" %% "akka-actor" % "2.6.20",
+        "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
+        "com.typesafe.akka" %% "akka-testkit" % AkkaVersion % Test,
+        "com.typesafe.akka" %% "akka-protobuf-v3" % AkkaVersion % Test,
+        "com.typesafe.akka" %% "akka-stream" % AkkaVersion % Test,
         "com.typesafe.akka" %% "akka-http-core" % "10.2.10"
       ),
     )

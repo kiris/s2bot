@@ -25,7 +25,7 @@ class WelcomeChannel[A : Brain : DataCodec](brainKey: String = DEFAULT_BRAIN_KEY
   override def apply(bot: S2Bot): Unit = {
     bot.hear {
       case ("welcome", message) =>
-        sayWelcome(bot, message.user, message.channel) {
+        sayWelcome(bot, message.channel) {
           bot.reply(message,
             s"""${Fmt.linkChannel(message.channel)} にウェルカムメッセージは登録されてないよ。
                |
@@ -40,8 +40,8 @@ class WelcomeChannel[A : Brain : DataCodec](brainKey: String = DEFAULT_BRAIN_KEY
     }
 
     bot.onEvent {
-      case MemberJoined(userId, channelId, _) =>
-        sayWelcome(bot, userId, channelId)(Future.unit)
+      case MemberJoined(_, channelId, _) =>
+        sayWelcome(bot, channelId)(Future.unit)
     }
   }
 
@@ -56,7 +56,7 @@ class WelcomeChannel[A : Brain : DataCodec](brainKey: String = DEFAULT_BRAIN_KEY
     } yield ()
   }
 
-  private def sayWelcome(bot: S2Bot, userId: String, channelId: String)(or: => Future[AnyVal]): Future[AnyVal] = {
+  private def sayWelcome(bot: S2Bot, channelId: String)(or: => Future[AnyVal]): Future[AnyVal] = {
     for {
       messages <- bot.brain[A].get(brainKey)
       message <- {

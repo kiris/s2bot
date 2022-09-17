@@ -28,34 +28,58 @@ class UserDictionary[A : Brain : DataCodec](brainKey: String = DEFAULT_BRAIN_KEY
   override def apply(bot: S2Bot): Unit = {
     bot.hear {
       case (LIST_KEYWORDS_PATTERN, message) =>
-        for {
-          keys <- listKeywords(bot, message.user)
-          _ <- keys match {
-            case Nil => bot.say(message, "登録しているメッセージは無いよ")
-            case ks => bot.say(message, ks.map("- " + _)mkString("\n"))
-          }
-        } yield ()
+        message.user match {
+          case Some(userId) =>
+            for {
+              keys <- listKeywords(bot, userId)
+              _ <- keys match {
+                case Nil => bot.say(message, "登録しているメッセージは無いよ")
+                case ks => bot.say(message, ks.map("- " + _)mkString("\n"))
+              }
+            } yield ()
+
+          case None =>
+            Future.unit
+        }
 
       case (SHOW_RESPONSE_PATTERN(key), message) =>
-        for {
-          responseOpt <- getMyResponse(bot, key, message.user)
-          _ <- responseOpt match {
-            case Some(response) => bot.say(message, response)
-            case None => bot.say(message, s"${key}に登録しているメッセージは無いよ")
-          }
-        } yield ()
+        message.user match {
+          case Some(userId) =>
+            for {
+              responseOpt <- getMyResponse(bot, key, userId)
+              _ <- responseOpt match {
+                case Some(response) => bot.say(message, response)
+                case None => bot.say(message, s"${key}に登録しているメッセージは無いよ")
+              }
+            } yield ()
+
+          case None =>
+            Future.unit
+        }
 
       case (UNREGISTER_RESPONSE_PATTERN(key), message) =>
-        for {
-          _ <- unregisterMyResponse(bot, message.user, key)
-          _ <- bot.say(message, s"${key}のメッセージを削除したよ")
-        } yield ()
+        message.user match {
+          case Some(userId) =>
+            for {
+              _ <- unregisterMyResponse(bot, userId, key)
+              _ <- bot.say(message, s"${key}のメッセージを削除したよ")
+            } yield ()
+
+          case None =>
+            Future.unit
+        }
 
       case (REGISTER_RESPONSE_PATTERN(key, response), message) =>
-        for {
-          _ <- registerMyResponse(bot, message.user, key, response)
-          _ <- bot.say(message, s"${key}にメッセージを登録したよ")
-        } yield ()
+        message.user match {
+          case Some(userId) =>
+
+            for {
+              _ <- registerMyResponse(bot, userId, key, response)
+              _ <- bot.say(message, s"${key}にメッセージを登録したよ")
+            } yield ()
+          case None =>
+            Future.unit
+        }
     }
   }
 

@@ -94,7 +94,10 @@ case class S2Bot(
 
   def say(message: Message, text: String): Future[Long] = say(message.channel, text, message.thread_ts)
 
-  def reply(message: Message, text: String): Future[Long] = say(message, s"${Fmt.linkUser(message.user)} $text")
+  def reply(message: Message, text: String): Future[Long] = message.user match {
+    case Some(u) => say(message, s"${Fmt.linkUser(u)} $text")
+    case None => Future(0L)
+  }
 
   def reaction(channelId: String, timestamp: String, emojiName: String): Future[Boolean] =
     web.addReaction(emojiName, channelId = Some(channelId), timestamp = Some(timestamp))
