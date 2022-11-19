@@ -103,7 +103,7 @@ case class S2Bot(
 
   def getUser(id: String): Future[User] = web.getUserInfo(id)
 
-  def getChannel(id: String): Future[Channel] = web.getChannelInfo(id)
+  def getChannel(id: String): Future[Channel] = web.getConversationInfo(id)
 
   private def applyPlugins(): S2Bot = {
     plugins.foldLeft(this) { (s2bot, plugin) =>
