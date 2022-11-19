@@ -78,7 +78,10 @@ case class S2Bot(
 
   def say(message: Message, text: String): Future[Long] = say(message.channel, text, message.thread_ts)
 
-  def reply(message: Message, text: String): Future[Long] = say(message, s"${Fmt.linkUser(message.user)} $text")
+  def reply(message: Message, text: String): Future[Long] = message.user match {
+    case Some(u) => say(message, s"${Fmt.linkUser(u)} $text")
+    case None => Future(0L)
+  }
 
   private def sendMessage(sendMssage: SendMessage): Future[Long] = {
     val sm = sendMessageHooks.foldLeft(sendMssage) { case (sm, hook) =>
@@ -92,13 +95,15 @@ case class S2Bot(
 
   def reaction(message: Message, emojiName: String): Future[Boolean] = reaction(message.channel, message.ts, emojiName)
 
-  def getChannelIdForName(name: String): Option[String] = rtmState.getChannelIdForName(name)
+  def getChannelIdForName(name: String): Future[Option[String]] =
+    web.listConversations().map(_.collectFirst { case c if c.name == name => c.id })
 
-  def getUserIdForName(name: String): Option[String] = rtmState.getUserIdForName(name)
+  def getUserIdForName(name: String): Future[Option[String]] =
+    web.listUsers().map(_.collectFirst { case u if u.name == name => u.id })
 
-  def getUser(id: String): Option[User] = rtmState.getUserById(id)
+  def getUser(id: String): Future[User] = web.getUserInfo(id)
 
-  def getChannel(id: String): Option[Channel] = rtmState.channels.find(_.id == id)
+  def getChannel(id: String): Future[Channel] = web.getChannelInfo(id)
 
   private def applyPlugins(): S2Bot = {
     plugins.foldLeft(this) { (s2bot, plugin) =>

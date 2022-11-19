@@ -15,7 +15,7 @@ class HotTopics(channelName: String = "hot-topics", threshold: Int = 10)(implici
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.CHANNELS -> List(
-      s"${Fmt.linkChannelForName(bot, channelName)} - 沢山のemojiが付いたメッセージを通知します"
+      s"#$channelName) - 沢山のemojiが付いたメッセージを通知します"
     )
   )
 
@@ -24,7 +24,8 @@ class HotTopics(channelName: String = "hot-topics", threshold: Int = 10)(implici
       case ReactionAdded(_, ReactionItemMessage(channelId, ts), _, _, _) =>
         for {
           hotTopic <- isHotTopic(bot, channelId, ts)
-          _<- bot.getChannelIdForName(channelName) match {
+          hotTopicChannelIdOpt <- bot.getChannelIdForName(channelName)
+          _<- hotTopicChannelIdOpt match {
             case Some(hotTopicChannelId) if hotTopic =>
               bot.say(hotTopicChannelId, s"${Fmt.linkMessageUrl(bot, channelId, ts)} が盛り上ってるよ")
 

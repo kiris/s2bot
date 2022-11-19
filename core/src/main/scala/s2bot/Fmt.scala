@@ -10,12 +10,8 @@ object Fmt {
 
   def linkChannel(channel: Channel): String = linkChannel(channel.id)
 
-  def linkChannelForName(bot: S2Bot, channelName: String): String = bot.getChannelIdForName(channelName).map(linkChannel).getOrElse(s"#$channelName")
-
   def linkUser(userId: String): String = s"<@$userId>"
 
   def linkUser(user: User): String = linkUser(user.id)
-
-  def linkUserForName(bot: S2Bot, userName: String): String = bot.getChannelIdForName(userName).map(linkUser).getOrElse(s"@$userName")
 
 }

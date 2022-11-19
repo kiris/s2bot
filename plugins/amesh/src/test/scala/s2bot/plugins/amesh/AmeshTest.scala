@@ -1,10 +1,8 @@
 package s2bot.plugins.amesh
 
 import java.time.LocalDateTime
-
 import akka.actor.ActorSystem
-import org.scalatest.AsyncFlatSpec
-
+import org.scalatest.flatspec.AsyncFlatSpec
 
 class AmeshTest extends AsyncFlatSpec {
 

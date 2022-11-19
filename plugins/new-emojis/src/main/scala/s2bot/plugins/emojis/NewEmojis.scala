@@ -1,12 +1,12 @@
 package s2bot.plugins.emojis
 
 import akka.actor.ActorSystem
-import s2bot.extensions.brain.{Brain, Codec}
 import s2bot.extensions.brain.Brain._
+import s2bot.extensions.brain.{Brain, Codec}
 import s2bot.extensions.cron.CronJob._
 import s2bot.plugins.buildin.Helpable
 import s2bot.plugins.buildin.Helpable.DefaultKeys
-import s2bot.{Fmt, S2Bot, Plugin}
+import s2bot.{Plugin, S2Bot}
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -16,7 +16,7 @@ class NewEmojis[A : Brain : ({type F[X] = Codec[Set[String],X]})#F](channelName:
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.CHANNELS -> List(
-      s"${Fmt.linkChannelForName(bot, channelName)} - 新しい絵文字が追加されたら通知します"
+      s"#$channelName - 新しい絵文字が追加されたら通知します"
     )
   )
 
@@ -42,10 +42,14 @@ class NewEmojis[A : Brain : ({type F[X] = Codec[Set[String],X]})#F](channelName:
     } yield result
   }
 
-  private def sayNewEmojis(bot: S2Bot, newEmojis: String): Future[Any] =
-    bot.getChannelIdForName(channelName) match {
-      case Some(channelId) => bot.say(channelId, s"新しい絵文字 $newEmojis が追加されたよ")
-      case None => Future.unit
-    }
+  private def sayNewEmojis(bot: S2Bot, newEmojis: String): Future[Any] = {
+    for {
+      channelIdOpt <- bot.getChannelIdForName(channelName)
+      _ <- channelIdOpt match {
+        case Some (channelId) => bot.say(channelId, s"新しい絵文字 $newEmojis が追加されたよ")
+        case None => Future.unit
+      }
+    } yield ()
+  }
 }
 

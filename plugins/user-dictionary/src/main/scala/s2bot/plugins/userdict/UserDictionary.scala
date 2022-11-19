@@ -35,48 +35,56 @@ class UserDictionary[A : Brain : DataCodec](brainKey: String = DEFAULT_BRAIN_KEY
           keys <- listKeywords(bot, userId)
           _ <- keys match {
             case Nil => bot.say(message, s"${Fmt.linkUser(userId)} のユーザー辞書には何も登録されてないよ")
-            case ks => bot.say(message, ks.map("- " + _).mkString("\n"))
+            case ks  => bot.say(message, ks.map("- " + _).mkString("\n"))
           }
         } yield ()
 
       case (LIST_KEYWORDS_PATTERN, message) =>
-        for {
-          keys <- listKeywords(bot, message.user)
-          _ <- keys match {
-            case Nil => bot.say(message, "ユーザー辞書には何も登録されてないよ")
-            case ks => bot.say(message, ks.map("- " + _).mkString("\n"))
-          }
-        } yield ()
+        message.user.map { userId =>
+          for {
+            keys <- listKeywords(bot, userId)
+            _ <- keys match {
+              case Nil => bot.say(message, "ユーザー辞書には何も登録されてないよ")
+              case ks  => bot.say(message, ks.map("- " + _).mkString("\n"))
+            }
+          } yield ()
+        }.getOrElse(Future.unit)
 
       case (SHOW_USER_RESPONSE_PATTERN(userId, key), message) =>
         for {
           responseOpt <- getResponse(bot, key, userId)
           _ <- responseOpt match {
             case Some(response) => bot.say(message, response)
-            case None => bot.say(message, s"${Fmt.linkUser(userId)} のユーザー辞書に ${key} は登録されてないよ")
+            case None           => bot.say(message, s"${Fmt.linkUser(userId)} のユーザー辞書に ${key} は登録されてないよ")
           }
         } yield ()
 
       case (SHOW_RESPONSE_PATTERN(key), message) =>
-        for {
-          responseOpt <- getResponse(bot, key, message.user)
-          _ <- responseOpt match {
-            case Some(response) => bot.say(message, response)
-            case None => bot.say(message, s"ユーザー辞書に ${key} は登録されてないよ")
-          }
-        } yield ()
+        message.user.map { userId =>
+          for {
+            responseOpt <- getResponse(bot, key, userId)
+            _ <- responseOpt match {
+              case Some(response) => bot.say(message, response)
+              case None           => bot.say(message, s"ユーザー辞書に ${key} は登録されてないよ")
+            }
+          } yield ()
+        }.getOrElse(Future.unit)
 
       case (UNREGISTER_RESPONSE_PATTERN(key), message) =>
-        for {
-          _ <- unregisterResponse(bot, message.user, key)
-          _ <- bot.say(message, s"ユーザー辞書から ${key} を削除したよ")
-        } yield ()
+        message.user.map { userId =>
+          for {
+            _ <- unregisterResponse(bot, userId, key)
+            _ <- bot.say(message, s"ユーザー辞書から ${key} を削除したよ")
+          } yield ()
+        }.getOrElse(Future.unit)
 
       case (REGISTER_RESPONSE_PATTERN(key, response), message) =>
-        for {
-          _ <- registerResponse(bot, message.user, key, response)
-          _ <- bot.say(message, s"ユーザー辞書に ${key} を登録したよ")
-        } yield ()
+        message.user.map { userId =>
+          for {
+            _ <- registerResponse(bot, userId, key, response)
+            _ <- bot.say(message, s"ユーザー辞書に ${key} を登録したよ")
+          } yield ()
+        }.getOrElse(Future.unit)
     }
   }
 

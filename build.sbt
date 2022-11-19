@@ -1,8 +1,9 @@
 import sbt.Keys.libraryDependencies
 
-val Scala212 = "2.12.8"
+val Scala212 = "2.12.17"
+val AkkaVersion = "2.6.20"
 
-val circeVersion = "0.11.1"
+val circeVersion = "0.14.1"
 
 lazy val baseSettings = Seq(
   homepage := Some(url("http://github.com/kiris/s2bot")),
@@ -59,7 +60,7 @@ lazy val modules: Seq[ProjectReference] = Seq(
   uranaiPlugin,
   googleImageSearchPlugin,
   deleteMessagePlugin,
-  welcomeChannelPlugin,
+  joinMessagePlugin,
   userDictionaryPlugin
 )
 
@@ -80,8 +81,11 @@ lazy val core = (project in file("core"))
         "Typesafe Repo" at "https://repo.typesafe.com/typesafe/releases/"
       ),
       libraryDependencies ++= Seq(
-        "com.github.slack-scala-client" %% "slack-scala-client" % "0.3.1",
-        "com.typesafe.akka" %% "akka-actor" % "2.6.20",
+        "com.github.slack-scala-client" %% "slack-scala-client" % "0.4.0",
+        "com.typesafe.akka" %% "akka-actor" % AkkaVersion,
+        "com.typesafe.akka" %% "akka-testkit" % AkkaVersion % Test,
+        "com.typesafe.akka" %% "akka-protobuf-v3" % AkkaVersion % Test,
+        "com.typesafe.akka" %% "akka-stream" % AkkaVersion % Test,
         "com.typesafe.akka" %% "akka-http-core" % "10.2.10"
       ),
     )
@@ -235,10 +239,10 @@ lazy val deleteMessagePlugin = (project in file("plugins/delete-message"))
       core % "test->test;compile->compile"
     )
 
-lazy val welcomeChannelPlugin = (project in file("plugins/welcome-channel"))
+lazy val joinMessagePlugin = (project in file("plugins/join-message"))
     .settings(baseSettings)
     .settings(
-      name := "s2bot-welcome-channel-plugin",
+      name := "s2bot-join-message-plugin",
       libraryDependencies ++= Seq(
       )
     )
