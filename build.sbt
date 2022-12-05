@@ -222,7 +222,7 @@ lazy val googleImageSearchPlugin = (project in file("plugins/google-image-search
     .settings(
       name := "s2bot-google-image-search-plugin",
       libraryDependencies ++= Seq(
-        "net.databinder.dispatch" %% "dispatch-core" % "0.13.4",
+        "org.dispatchhttp" %% "dispatch-core" % "1.2.0",
         "com.github.etaty" %% "rediscala" % "1.8.0"
       )
     )
