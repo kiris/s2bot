@@ -15,7 +15,7 @@ class HotTopics(channelName: String = "hot-topics", threshold: Int = 10)(implici
 
   override def usage(bot: S2Bot): Helpable.Usage = Helpable.Usage(
     DefaultKeys.CHANNELS -> List(
-      s"#$channelName) - 沢山のemojiが付いたメッセージを通知します"
+      s"#$channelName - 沢山のemojiが付いたメッセージを通知します"
     )
   )
 

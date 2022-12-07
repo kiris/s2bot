@@ -114,23 +114,27 @@ case class S2Bot(
   private def registerRtmHandlers(): Unit = {
     hearHandlers.foreach { handler =>
       rtm.onMessage { message =>
-        for {
-          result <- handler.lift((message.text.trim, message))
-        } yield recoverErrors(result)
+        if (message.bot_id.isEmpty) {
+          for {
+            result <- handler.lift((message.text.trim, message))
+          } yield recoverErrors(result)
+        }
       }
     }
 
     responseHandlers.foreach { handler =>
       rtm.onMessage { message =>
-        for {
-          result <- {
-            if (message.text.startsWith(me)) {
-              handler.lift((message.text.substring(me.length).trim, message))
-            } else {
-              None
+        if (message.bot_id.isEmpty) {
+          for {
+            result <- {
+              if (message.text.startsWith(me)) {
+                handler.lift((message.text.substring(me.length).trim, message))
+              } else {
+                None
+              }
             }
-          }
-        } yield recoverErrors(result)
+          } yield recoverErrors(result)
+        }
       }
     }
 

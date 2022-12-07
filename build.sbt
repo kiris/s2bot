@@ -61,7 +61,8 @@ lazy val modules: Seq[ProjectReference] = Seq(
   googleImageSearchPlugin,
   deleteMessagePlugin,
   joinMessagePlugin,
-  userDictionaryPlugin
+  userDictionaryPlugin,
+  timelinePlugin,
 )
 
 lazy val all = (project in file("."))
@@ -255,6 +256,18 @@ lazy val userDictionaryPlugin = (project in file("plugins/user-dictionary"))
     .settings(baseSettings)
     .settings(
       name := "s2bot-user-dictionary-plugin",
+      libraryDependencies ++= Seq(
+      )
+    )
+    .dependsOn(
+      core % "test->test;compile->compile",
+      brainExtension % "test->test;compile->compile"
+    )
+
+lazy val timelinePlugin = (project in file("plugins/timeline"))
+    .settings(baseSettings)
+    .settings(
+      name := "s2bot-timeline-plugin",
       libraryDependencies ++= Seq(
       )
     )
